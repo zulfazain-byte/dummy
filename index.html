@@ -1507,105 +1507,176 @@
                         outlinePass.selectedObjects = [];
                     }
                 }
-                
+
+                // ...
+                let isDieLineView = false;
+                let isAnimating = false; // <-- TAMBAHKAN INI UNTUK MENCEGAH BUG
+                let selectedPart = null;
+                // ...
+                // --- FUNGSI DIELINE YANG DIPERBAIKI DAN LEBIH DETAIL ---
                 function toggleDieLineView() {
+                    // 1. PENGAMAN ANIMASI:
+                    // Mencegah fungsi berjalan jika animasi lain sedang aktif.
+                    if (isAnimating) return;
+                    isAnimating = true; // Kunci fungsi agar tidak bisa diklik lagi
+
+                    // 2. PERSIAPAN:
+                    // Balik status view dan matikan kontrol orbit mouse
                     isDieLineView = !isDieLineView;
                     controls.enabled = !isDieLineView;
 
+                    // Ambil dimensi kotak (dikonversi dari cm ke unit 3D)
                     const w = (state.width || defaultState.width) / 10;
                     const h = (state.height || defaultState.height) / 10;
                     const d = (state.depth || defaultState.depth) / 10;
-                    
-                    const duration = 1000;
-                    
-                    const partMap = {};
-                    boxParts.forEach(p => partMap[p.name] = p);
+                    const duration = 1200; // Durasi animasi (dalam milidetik)
 
+                    // 3. PENGATURAN TARGET DIELINE (JARING-JARING):
+                    // Ini adalah bagian terpenting.
+                    
+                    // Rotasi standar agar semua bagian "tertidur" datar menghadap ke atas.
+                    // (Rotasi -90 derajat pada sumbu X)
+                    const flatQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
+
+                    // Target posisi (pos) dan rotasi (rot) untuk setiap bagian
+                    // Semua target 'pos' memiliki Y=0 agar rata di lantai.
+                    // Pola ini membentuk "salib" (cross pattern) standar.
+                    const targets = {
+                        "Dasar": {
+                            pos: new THREE.Vector3(0, 0, 0), // 'Dasar' sebagai pusat (0,0,0)
+                            rot: flatQuat // Datar
+                        },
+                        "Depan": {
+                            // 'Depan' menempel di sisi +Z dari 'Dasar'
+                            pos: new THREE.Vector3(0, 0, d / 2 + h / 2),
+                            rot: flatQuat // Datar
+                        },
+                        "Belakang": {
+                            // 'Belakang' menempel di sisi -Z dari 'Dasar'
+                            pos: new THREE.Vector3(0, 0, -d / 2 - h / 2),
+                            // Datar, tapi diputar 180 derajat (Math.PI) agar teks tidak terbalik
+                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, Math.PI))
+                        },
+                        "Kiri": {
+                            // 'Kiri' menempel di sisi -X dari 'Dasar'
+                            pos: new THREE.Vector3(-w / 2 - h / 2, 0, 0),
+                            // Datar, tapi diputar 90 derajat agar teks miring dengan benar
+                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, Math.PI / 2))
+                        },
+                        "Kanan": {
+                            // 'Kanan' menempel di sisi +X dari 'Dasar'
+                            pos: new THREE.Vector3(w / 2 + h / 2, 0, 0),
+                            // Datar, diputar -90 derajat
+                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, -Math.PI / 2))
+                        },
+                        "Tutup Atas": {
+                            // 'Tutup' menempel di sisi "atas" dari 'Belakang' (karena engselnya di sana)
+                            pos: new THREE.Vector3(0, 0, -d / 2 - h - d / 2),
+                            // Rotasinya sama dengan 'Belakang' agar nyambung
+                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, Math.PI))
+                        },
+                    };
+
+                    // 4. LOGIKA ANIMASI
                     if (isDieLineView) {
-                        // Simpan posisi kamera saat ini
+                        // --- TINDAKAN: MASUK KE MODE DIELINE ---
+
+                        // 4a. Simpan posisi & target kamera 3D saat ini
                         originalCameraPos.copy(camera.position);
                         originalControlsTarget.copy(controls.target);
 
-                        // Target Dieline positions & rotations
-                        const targets = {
-                            "Dasar": { 
-                                pos: new THREE.Vector3(0, 0, 0), 
-                                rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)) 
-                            },
-                            "Depan": { 
-                                pos: new THREE.Vector3(0, d/2 + h/2, 0), 
-                                rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)) 
-                            },
-                            "Belakang": { 
-                                pos: new THREE.Vector3(0, -(d/2 + h/2), 0), 
-                                rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, Math.PI)) 
-                            },
-                            "Kiri": { 
-                                pos: new THREE.Vector3(-(w/2 + d/2), 0, 0), 
-                                rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)) 
-                            },
-                            "Kanan": { 
-                                pos: new THREE.Vector3(w/2 + d/2, 0, 0), 
-                                rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)) 
-                            },
-                            "Tutup Atas": { 
-                                pos: new THREE.Vector3(0, d/2 + h + d/2, 0), 
-                                rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)) 
-                            },
-                        };
+                        // 4b. Tutup kotak (jika terbuka) sebelum dibongkar
+                        if (lidPivot.rotation.x !== 0) {
+                             lidPivot.rotation.x = 0; // Reset instan
+                        }
 
-                        // Lepas dari parent group
+                        // 4c. Lepas semua bagian dari grup dan animasikan
                         boxParts.forEach(part => {
-                            if (!part.userData.originalPos) { // Simpan jika belum ada
+                            // Simpan data "original" (parent & pos/rot LOKAL) untuk dikembalikan nanti
+                            if (!part.userData.originalParent) {
+                                part.userData.originalParent = part.parent;
                                 part.userData.originalPos = part.position.clone();
                                 part.userData.originalRot = part.rotation.clone();
-                                part.userData.originalQuat = part.quaternion.clone();
-                                part.userData.originalParent = part.parent;
                             }
-                            
-                            // Ambil world position/rotation sebelum dilepas
+
+                            // Dapatkan posisi & rotasi GLOBAL (dunia) saat ini
                             const worldPos = new THREE.Vector3();
                             const worldQuat = new THREE.Quaternion();
                             part.getWorldPosition(worldPos);
                             part.getWorldQuaternion(worldQuat);
-                            
-                            scene.attach(part); // Lepas dari parent
-                            
-                            // Set ke world pos/rot
+
+                            // Pindahkan 'part' dari 'boxGroup' langsung ke 'scene'
+                            scene.attach(part); 
+                            // Atur pos/rot globalnya agar tidak "melompat"
                             part.position.copy(worldPos);
                             part.quaternion.copy(worldQuat);
 
+                            // Animasikan 'part' dari pos/rot globalnya ke target dieline
                             const t = targets[part.name];
-                            animateValue(part.position.clone(), t.pos, duration, (v) => part.position.copy(v));
-                            animateValue(part.quaternion.clone(), t.rot, duration, (q) => part.quaternion.copy(q));
+                            if (t) {
+                                animateValue(part.position.clone(), t.pos, duration, (v) => part.position.copy(v));
+                                animateValue(part.quaternion.clone(), t.rot, duration, (q) => part.quaternion.copy(q));
+                            }
                         });
 
-                        // Pindahkan kamera
-                        animateValue(camera.position.clone(), new THREE.Vector3(0, 0, 4), duration, (v) => camera.position.copy(v));
+                        // 4d. Animasikan kamera ke tampilan "Top-Down" (dari atas)
+                        const layoutWidth = w + h*2; // Total lebar jaring-jaring
+                        const layoutHeight = d + h + d; // Total tinggi jaring-jaring
+                        const maxDim = Math.max(layoutWidth, layoutHeight); // Ambil ukuran terbesar
+                        // Atur posisi Y kamera berdasarkan ukuran jaring-jaring agar pas di layar
+                        animateValue(camera.position.clone(), new THREE.Vector3(0, maxDim * 1.2 + 3, 0.1), duration, (v) => camera.position.copy(v));
                         animateValue(controls.target.clone(), new THREE.Vector3(0, 0, 0), duration, (v) => controls.target.copy(v));
 
-                    } else { // Kembali ke 3D
-                        boxParts.forEach(part => {
-                            const t = targets[part.name];
-                            animateValue(part.position.clone(), part.userData.originalWorldPos, duration, (v) => part.position.copy(v));
-                            animateValue(part.quaternion.clone(), part.userData.originalWorldQuat, duration, (q) => part.quaternion.copy(q));
-                        });
+                    } else {
+                        // --- TINDAKAN: KEMBALI KE MODE 3D ---
                         
-                        // Kembalikan kamera
+                        boxParts.forEach(part => {
+                            // 4a. Hitung target (posisi 3D asli)
+                            // Ini adalah perbaikan dari bug Anda.
+                            // Kita buat 'dummy' object untuk menghitung pos/rot global yang seharusnya.
+                            const dummy = new THREE.Object3D();
+                            dummy.position.copy(part.userData.originalPos);
+                            dummy.rotation.copy(part.userData.originalRot);
+                            part.userData.originalParent.add(dummy); // Pasang dummy ke parent asli
+                            
+                            const targetWorldPos = new THREE.Vector3();
+                            const targetWorldQuat = new THREE.Quaternion();
+                            dummy.getWorldPosition(targetWorldPos); // Dapatkan pos global
+                            dummy.getWorldQuaternion(targetWorldQuat); // Dapatkan rot global
+                            part.userData.originalParent.remove(dummy); // Hapus dummy
+
+                            // 4b. Animasikan 'part' kembali ke pos/rot 3D aslinya
+                            animateValue(part.position.clone(), targetWorldPos, duration, (v) => part.position.copy(v));
+                            animateValue(part.quaternion.clone(), targetWorldQuat, duration, (q) => part.quaternion.copy(q));
+                        });
+
+                        // 4c. Animasikan kamera kembali ke posisi 3D aslinya
                         animateValue(camera.position.clone(), originalCameraPos, duration, (v) => camera.position.copy(v));
                         animateValue(controls.target.clone(), originalControlsTarget, duration, (v) => controls.target.copy(v));
 
-                        // Pasang kembali ke parent setelah animasi
+                        // 4d. Pasang kembali (re-attach) 'part' ke 'boxGroup' SETELAH animasi selesai
                         setTimeout(() => {
                             boxParts.forEach(part => {
-                                part.userData.originalParent.attach(part); // Pasang kembali ke parent
-                                // Set local pos/rot
+                                // Pasang kembali ke parent aslinya (misal: 'lid' ke 'lidPivot')
+                                part.userData.originalParent.attach(part);
+                                
+                                // Reset ke pos/rot LOKAL aslinya (menghindari eror floating point)
                                 part.position.copy(part.userData.originalPos);
                                 part.rotation.copy(part.userData.originalRot);
                             });
-                        }, duration);
+                            controls.enabled = true; // Aktifkan kembali kontrol orbit
+                            isAnimating = false; // Buka kunci animasi
+                        }, duration + 50); // Beri buffer 50ms
+                        return; // Penting: return di sini karena kita pakai setTimeout
                     }
+
+                    // 5. BUKA KUNCI ANIMASI
+                    // (Hanya untuk transisi KE mode dieline, karena mode KEMBALI di-handle di setTimeout)
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, duration + 50);
                 }
+                // --- AKHIR FUNGSI DIELINE ---
                 
                 function captureScreenshot() {
                     outlinePass.selectedObjects = []; // Hide outline for screenshot

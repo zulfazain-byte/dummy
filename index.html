@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Favicon -->
-    <link rel="icon" href="https://placehold.co/32x32/3B82F6/FFFFFF?text=A" type="image/png">
+    <link rel="icon" href="img/logo.png" type="image/png">
     
     <!-- Judul dan Meta Deskripsi untuk SEO -->
     <title>Percetakan Arjuna - Kemasan Modern & Interaktif</title>
@@ -18,10 +18,13 @@
     <!-- Google Fonts for creative typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Three.js Library for 3D Viewer -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Canvas Confetti for Micro-interactions -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <!-- Post-processing and controls -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
@@ -39,443 +42,192 @@
         /* Menggunakan font Poppins untuk seluruh halaman */
         body {
             font-family: 'Poppins', sans-serif;
-            /* Mencegah penyalinan konten */
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            overflow-x: hidden;
         }
-        /* Animasi halus untuk scroll */
         html {
             scroll-behavior: smooth;
         }
         /* Style untuk CTA button agar lebih menonjol */
-.cta-button {
-    position: relative;
-    overflow: hidden;
-    /* Efek 3D */
-    transform: perspective(1px) translateZ(0);
-    /* Transisi lebih dinamis */
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* Menambahkan glow */
-    border: 2px solid transparent;
-
-    /* Gradien Bergerak */
-    background-size: 200% auto;
-    background-image: linear-gradient(to right, var(--tw-gradient-stops));
-}
-
-.cta-button:hover,
-.cta-button:focus {
-    /* Hover dan focus */
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-    /* Efek glow saat di-hover */
-    border-color: rgba(255, 255, 255, 0.5); 
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.4); 
-    
-    /* Animasi Gradien Bergerak */
-    background-position: right center;  
-}
-
-.cta-button:active {
-    /* Efek saat ditekan */
-    transform: translateY(0);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    animation: button-pop 0.3s ease-out; /* Animasi pop-up saat diklik */
-}
-        
-        /* --- ANIMASI RIPPLE EFFECT LEBIH CEPAT DAN HALUS --- */
-.ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%);
-    transform: scale(0);
-    animation: ripple-animation 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    pointer-events: none;
-}
-
-@keyframes ripple-animation {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-        
-/* --- Tambahan: Animasi Pop-Up untuk tombol itu sendiri saat di-klik --- */
-@keyframes button-pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); } 
-    100% { transform: scale(1); }
-}
-
-/* 1. Animasi pada header */
-.header-animate {
-    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
-}
-
-.header-scrolled {
-    transform: translateY(0);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* 2. Animasi pada judul header */
-.title-animate {
-    transition: all 0.4s ease-in-out;
-}
-.title-animate:hover {
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
-}
-.title-animate:hover .text-blue-600 {
-    transform: scale(1.1) rotate(2deg);
-    display: inline-block;
-}
-
-        /* 3. Style untuk Galeri Klien Interaktif */
-        .client-card {
+        .cta-button {
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-            transition: transform 0.8s;
-            cursor: pointer;
-        }
-        .client-card > div {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            backface-visibility: hidden;
-            transition: transform 0.8s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: white; 
-        }
-        .client-logo {
-            transform: rotateY(0deg);
-            z-index: 2;
-        }
-        .client-product {
-            transform: rotateY(180deg);
-            z-index: 1;
-        }
-        .client-card:hover .client-logo {
-            transform: rotateY(-180deg);
-        }
-        .client-card:hover .client-product {
-            transform: rotateY(0deg);
-        }
-        .client-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .client-logo img {
-            object-fit: contain;  
-            padding: 1rem; 
-        }
-
-
-        /* 4. Animasi pada bagian Keunggulan Kami */
-        .benefit-card {
-            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out, border 0.5s ease-in-out;
-            border: 3px solid transparent;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-8px) rotate(-1deg);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: #3b82f6;
-            animation: pulsate-border 1.9s infinite ease-in-out;
-        }
-
-        @keyframes pulsate-border {
-            0% { border-color: #3b82f6; }
-            50% { border-color: #60a5fa; }
-            100% { border-color: #3b82f6; }
-        }
-        .benefit-icon {
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            cursor: pointer; 
-        }
-        .benefit-card:hover .benefit-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .benefit-icon.is-spinning {
-            transform: rotate(360deg) scale(1.1);
-        }
-
-
-        /* 5. Animasi pada bagian Produk Kemasan Kami */
-        .product-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .product-card img {
-            transition: transform 0.5s ease-in-out;
-        }
-        .product-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-        .product-card:hover img {
-            transform: scale(1.1);
-        }
-        .product-card:active {
-            transform: translateY(-4px) scale(1);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 6. Animasi pada bagian Partner Terpercaya (Tentang Kami) */
-        .about-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .about-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-        .about-card:active {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .stat-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .counter-value {
-            font-variant-numeric: tabular-nums;
-        }
-
-
-        /* 7. Animasi untuk credit line di footer */
-        .credit-line {
-            position: relative;
-            display: inline-block;
-            transition: transform 0.3s ease-in-out;
-        }
-        .credit-line::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 1px;
-            background-color: #ffffff;
-            transition: width 0.3s ease-in-out;
-            opacity: 0.5;
-        }
-        .credit-line:hover {
-            transform: translateY(-2px);
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-        }
-        .credit-line:hover::after {
-            width: 100%;
-        }
-
-        /* 8. Animasi pada hero title */
-        .hero-title-highlight {
-            transition: text-shadow 0.3s ease-in-out;
-        }
-        .hero-title-highlight:hover {
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
-        }
-        .hero-text-word {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        /* 9. Animasi untuk tombol WhatsApp mengambang */
-        .floating-whatsapp {
-            animation: pulse-green 2s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        @keyframes pulse-green {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
-            }
-            70% {
-                transform: scale(1.1);
-                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
-            }
-        }
-
-        /* Animasi pada judul di setiap section */
-        .section-title:hover {
-            transition: color 0.3s ease-in-out;
-            color: #3b82f6;
-        }
-        .section-subtitle:hover {
-             transition: color 0.3s ease-in-out;
-             color: #6b7280;
-        }
-
-        /* 10. Animasi pada bagian peta */
-        .map-container {
-            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
-        }
-
-        .map-container:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-        }
-
-        .map-container:hover iframe {
-            filter: grayscale(0%);
-            transition: filter 0.4s ease-in-out;
-        }
-
-        /* 11. Animasi 3D untuk bagian Herbal & Kosmetik */
-        .premium-card {
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease-in-out, border-color 0.6s ease-in-out;
-            transform: translateZ(0);
+            transform: perspective(1px) translateZ(0);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border: 2px solid transparent;
-        }
-        .premium-card:hover {
-            transform: scale(1.05) translateY(-5px) translateZ(10px);
-            box-shadow: 
-                0 0 10px rgba(59, 130, 246, 0.2), 
-                0 0 20px rgba(59, 130, 246, 0.1), 
-                0 15px 30px rgba(0, 0, 0, 0.25);  
-            border-color: #3b82f6;
-        }
-        .premium-card h3, .premium-card p {
-            transition: transform 0.6s ease-in-out;
-        }
-        .premium-card:hover h3, .premium-card:hover p {
-            transform: translateZ(20px);
-        }
-        
-        .hero-image {
-            width: 100%;
-            height: auto;
-            display: block;
+            background-size: 200% auto;
+            background-image: linear-gradient(to right, var(--tw-gradient-stops));
         }
 
-        /* Animasi Fade-in on Scroll (untuk stagger) */
-        .fade-in-on-scroll {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        .cta-button:hover,
+        .cta-button:focus {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.5); 
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.4); 
+            background-position: right center;  
         }
-        .fade-in-on-scroll.is-visible {
-            opacity: 1;
+
+        .cta-button:active {
             transform: translateY(0);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            animation: button-pop 0.3s ease-out; 
         }
         
-        /* GAYA BARU UNTUK 3D MOCKUP VIEWER */
+        @keyframes button-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); } 
+            100% { transform: scale(1); }
+        }
+
+        .header-animate { transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out; }
+        .header-scrolled { transform: translateY(0); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* Enhanced 3D Card Effect for Products & Benefits */
+        .product-card, .benefit-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .product-card:hover, .benefit-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        /* 2D Infinite Marquee Testimonial Styles */
+        .testimonial-marquee-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 2rem 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        
+        .testimonial-track {
+            display: inline-flex;
+            gap: 2rem; /* Jarak antar kartu */
+            animation: scrollMarquee 40s linear infinite; /* Kecepatan sangat pelan & mewah */
+            width: max-content;
+        }
+        
+        .testimonial-marquee-container:hover .testimonial-track {
+            animation-play-state: paused;
+        }
+
+        .testimonial-card-2d {
+            width: 350px; 
+            white-space: normal; 
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .testimonial-card-2d:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* Modern Developer Credit Styles */
+        .dev-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.25rem;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .dev-badge:hover {
+            background: rgba(31, 41, 55, 0.95);
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        .dev-avatar {
+            position: relative;
+            margin-right: 0.75rem;
+        }
+        .dev-status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background-color: #10B981; 
+            border: 1.5px solid #1F2937;
+            border-radius: 50%;
+            animation: pulse-status 2s infinite;
+        }
+        @keyframes pulse-status {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .dev-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            background: linear-gradient(90deg, #60A5FA, #A78BFA, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .dev-role {
+            font-size: 0.65rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Other Styles */
+        .section-title:hover { color: #3b82f6; transition: color 0.3s ease-in-out; }
+        .accordion-button:hover { background-color: #f3f4f6; }
+        .accordion-content { animation: slide-down 0.3s ease-out; }
+        @keyframes slide-down { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Toast */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { min-width: 250px; background: white; border-left: 4px solid; padding: 16px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out forwards; display: flex; align-items: center; justify-content: space-between; }
+        .toast.success { border-color: #22c55e; } .toast.error { border-color: #ef4444; } .toast.info { border-color: #3b82f6; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
+
+        /* Mockup Canvas Container */
         #mockup-canvas-container {
             width: 100%;
-            height: 450px;
+            height: 500px; /* Taller for better view */
             cursor: grab;
-            border-radius: 0.75rem;
+            border-radius: 1rem;
             touch-action: none;
             position: relative;
             overflow: hidden;
+            background: #f3f4f6; /* Fallback */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
         }
         #mockup-canvas-container:active { cursor: grabbing; }
-
-        .control-label {
-            display: block;
-            margin-bottom: 0.25rem;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
-        }
-        input[type="text"], input[type="number"], select, input[type="range"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            background-color: white;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
-        }
-
-        .side-selector label {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border: 1px solid #d1d5db;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-grow: 1;
-            text-align: center;
-        }
-        .side-selector input[type="radio"]:checked + label {
-            background-color: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-        .side-selector input[type="radio"] { display: none; }
-
-        /* Accordion Styles */
-        .accordion-button {
-            width: 100%;
-            background-color: #f9fafb;
-            color: #111827;
-            cursor: pointer;
-            padding: 1rem;
-            text-align: left;
-            border: none;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 1.125rem;
-            font-weight: 700;
-            transition: background-color 0.3s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .accordion-button:hover { background-color: #f3f4f6; }
-        .accordion-button.active .accordion-arrow { transform: rotate(180deg); }
-        .accordion-arrow { transition: transform 0.3s ease; }
-        .accordion-content {
-            padding: 1.5rem;
-            background-color: white;
-            display: none;
-            border-bottom: 1px solid #e5e7eb;
-            animation: slide-down 0.3s ease-out;
-        }
-        @keyframes slide-down {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Modals */
-        .modal {
-             transition: opacity 0.3s ease-in-out;
-        }
         
-        #ar-button {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border-radius: 999px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 999;
-        }
-
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -484,31 +236,29 @@
     <header id="header" class="bg-white shadow-md sticky top-0 z-50 header-animate">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center max-w-7xl">
             <div class="flex items-center space-x-3">
-                <!-- Logo Percetakan Arjuna -->
-                <img src="https://placehold.co/48x48/3B82F6/FFFFFF?text=A" alt="Logo Percetakan Arjuna" class="h-12 w-auto">
+                <img src="img/logo.png" alt="Logo Percetakan Arjuna" class="h-12 w-auto">
                 <a href="#" class="text-xl md:text-2xl font-bold text-gray-800 title-animate">Percetakan <span class="text-blue-600">Arjuna</span></a>
             </div>
-            <!-- Navigasi Desktop -->
             <div class="hidden md:flex items-center space-x-8" id="desktop-nav">
                 <a href="#produk" class="nav-link text-gray-600 hover:text-blue-600" data-section="produk">Produk</a>
                 <a href="#mockup-viewer" class="nav-link text-gray-600 hover:text-blue-600" data-section="mockup-viewer">Pratinjau 3D</a>
                 <a href="#tentang" class="nav-link text-gray-600 hover:text-blue-600" data-section="tentang">Tentang Kami</a>
+                <a href="#testimoni" class="nav-link text-gray-600 hover:text-blue-600" data-section="testimoni">Testimoni</a>
+                <a href="#faq" class="nav-link text-gray-600 hover:text-blue-600" data-section="faq">FAQ</a>
                 <a href="#kontak" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Hubungi Kami</a>
             </div>
-            <!-- Tombol Menu Mobile -->
             <div class="md:hidden">
                 <button id="menu-btn" class="text-gray-600 hover:text-blue-600 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
         </nav>
-        <!-- Menu Mobile -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <a href="#produk" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Produk</a>
             <a href="#mockup-viewer" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Pratinjau 3D</a>
             <a href="#tentang" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Tentang Kami</a>
+             <a href="#testimoni" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Testimoni</a>
+            <a href="#faq" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">FAQ</a>
             <a href="#kontak" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Hubungi Kami</a>
         </div>
     </header>
@@ -516,7 +266,7 @@
     <main>
         <!-- Image Banner Section -->
         <section class="w-full bg-white">
-            <img src="https://placehold.co/1920x600/e0e7ff/334155?text=Solusi+Kemasan+Profesional" alt="Kemasan Produk Percetakan Arjuna" class="w-full h-auto hero-image">
+            <img src="img/Banner.png.png" alt="Kemasan Produk Percetakan Arjuna" class="w-full h-auto hero-image">
         </section>
 
         <!-- Hero Section -->
@@ -541,8 +291,8 @@
         <section class="py-16" id="keunggulan">
             <div class="container mx-auto px-6 max-w-7xl">
                 <div class="text-center mb-12">
-                     <h2 class="text-3xl md:text-4xl font-bold section-title">Keunggulan Kami</h2>
-                     <p class="mt-2 text-gray-600 section-subtitle">Alasan mengapa ratusan UMKM memercayakan kemasannya kepada kami.</p>
+                      <h2 class="text-3xl md:text-4xl font-bold section-title">Keunggulan Kami</h2>
+                      <p class="mt-2 text-gray-600 section-subtitle">Alasan mengapa ratusan UMKM memercayakan kemasannya kepada kami.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center" id="benefit-grid">
                     <div class="benefit-card bg-white p-8 rounded-lg shadow-lg fade-in-on-scroll" style="--stagger-delay: 0s;"><div class="bg-blue-100 text-blue-600 rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-4 benefit-icon"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" /></svg></div><h3 class="text-xl font-bold mb-2">Desain Suka-Suka GRATIS</h3><p class="text-gray-600">Tim desain siap membantu membuat kemasan menarik sesuai selera dan impian Anda.</p></div>
@@ -574,6 +324,7 @@
                     <p class="mt-2 text-gray-600 section-subtitle">Berbagai pilihan kemasan untuk segala jenis kebutuhan bisnis Anda.</p>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6" id="product-grid">
+                    <!-- Isi produk sama seperti sebelumnya -->
                     <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Lunch+Box" alt="Lunch Box" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Lunch Box</h4></div></div>
                     <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.05s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Sate" alt="Taichan" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Sate</h4></div></div>
                     <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.1s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Brownies" alt="Brownies" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Brownies</h4></div></div>
@@ -632,7 +383,7 @@
                                 <span>Pengaturan Material & Lingkungan</span>
                                 <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div class="accordion-content">
+                            <div class="accordion-content hidden">
                                 <div class="space-y-4">
                                     <div><label for="material-select" class="control-label">Pilih Material</label><select id="material-select"><option value="ivory">Ivory / Art Carton (Putih)</option><option value="kraft">Kraft (Coklat)</option><option value="duplex">Duplex (Abu-abu)</option></select></div>
                                     <div>
@@ -651,35 +402,53 @@
                                         <select id="environment-select">
                                             <option value="studio">Studio Abu-abu</option>
                                             <option value="wood">Meja Kayu</option>
-                                            <option value="marble">Meja Marmer</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <!-- Pengaturan Konten -->
                              <button class="accordion-button">
-                                <span>Pengaturan Konten (Logo & Teks)</span>
+                                <span>Pengaturan Konten (Stiker, Logo & Teks)</span>
                                 <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div class="accordion-content">
+                            <div class="accordion-content hidden">
                                 <p class="text-sm text-gray-500 mb-4">Klik langsung pada sisi kotak di pratinjau 3D untuk memilih dan mengeditnya.</p>
                                 <div class="space-y-4">
-                                    <div><label class="control-label">Sisi yang Dipilih</label><select id="content-side-select" class="w-full" disabled></select></div>
-                                    <div><label class="control-label">Tipe Konten</label><div class="side-selector flex rounded-md overflow-hidden"><input type="radio" id="content-type-none" name="content-type" value="none" checked><label for="content-type-none">Kosong</label><input type="radio" id="content-type-logo" name="content-type" value="logo"><label for="content-type-logo">Logo</label><input type="radio" id="content-type-text" name="content-type" value="text"><label for="content-type-text">Teks</label></div></div>
-                                    <!-- Logo & Text Controls -->
+                                    <div><label class="control-label">Sisi yang Dipilih</label><select id="content-side-select" class="w-full"></select></div>
+                                    <div>
+                                        <label class="control-label">Tipe Konten</label>
+                                        <div class="side-selector flex rounded-md overflow-hidden flex-wrap">
+                                            <input type="radio" id="content-type-none" name="content-type" value="none" checked><label for="content-type-none">Kosong</label>
+                                            <input type="radio" id="content-type-logo" name="content-type" value="logo"><label for="content-type-logo">Logo</label>
+                                            <input type="radio" id="content-type-text" name="content-type" value="text"><label for="content-type-text">Teks</label>
+                                            <input type="radio" id="content-type-sticker" name="content-type" value="sticker"><label for="content-type-sticker">Stiker</label>
+                                        </div>
+                                    </div>
+                                    <!-- Logo & Text & Sticker Controls -->
                                     <div id="content-controls-container" class="hidden space-y-4 pt-4 border-t">
                                         <div class="grid grid-cols-2 gap-4">
                                             <div><label for="content-offset-x" class="control-label">Posisi X: <span id="offset-x-value">0</span>%</label><input id="content-offset-x" type="range" min="-50" max="50" step="1" value="0"></div>
                                             <div><label for="content-offset-y" class="control-label">Posisi Y: <span id="offset-y-value">0</span>%</label><input id="content-offset-y" type="range" min="-50" max="50" step="1" value="0"></div>
                                         </div>
+                                        
+                                        <!-- Sticker Specific -->
+                                        <div id="sticker-controls-container" class="hidden space-y-4">
+                                            <label class="control-label">Pilih Stiker</label>
+                                            <div class="grid grid-cols-4 gap-2">
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="halal" title="Halal">🟢</button>
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="recycle" title="Daur Ulang">♻️</button>
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="natural" title="100% Natural">🌿</button>
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="thankyou" title="Thank You">❤️</button>
+                                            </div>
+                                            <div><label for="sticker-scale-slider" class="control-label">Ukuran Stiker: <span id="sticker-scale-value">100</span>%</label><input id="sticker-scale-slider" type="range" min="0.2" max="1.5" step="0.05" value="1.0"></div>
+                                        </div>
+
                                         <!-- Logo Specific -->
                                         <div id="logo-controls-container" class="hidden space-y-4"><label for="logo-upload" class="w-full text-center py-2 px-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 flex items-center justify-center"><span>Unggah Logo</span></label><input id="logo-upload" type="file" class="hidden" accept="image/png, image/jpeg"><div><label for="logo-scale-slider" class="control-label">Ukuran Logo: <span id="logo-scale-value">100</span>%</label><input id="logo-scale-slider" type="range" min="0.2" max="1.5" step="0.05" value="1.0"></div></div>
+                                        
                                         <!-- Text Specific -->
                                         <div id="text-controls-container" class="hidden space-y-4">
                                             <div><label for="text-input" class="control-label">Isi Teks</label><input type="text" id="text-input" placeholder="Tuliskan Sesuatu..."></div>
-                                            <button id="gemini-tagline-btn" class="w-full text-sm bg-purple-100 text-purple-700 font-semibold py-2 px-4 rounded-lg hover:bg-purple-200 transition flex items-center justify-center">
-                                                ✨ Buat Tagline dengan AI
-                                            </button>
                                             <div><label for="font-select" class="control-label">Jenis Huruf</label><select id="font-select"><option>Poppins</option><option>Arial</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option></select></div><div><label for="font-size-slider" class="control-label">Ukuran Huruf: <span id="font-size-value">48</span></label><input id="font-size-slider" type="range" min="16" max="128" step="1" value="48"></div></div>
                                          <!-- Premium Finish -->
                                         <div>
@@ -700,15 +469,50 @@
                                 <span>Tampilan & Warna</span>
                                 <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div class="accordion-content">
+                            <div class="accordion-content hidden">
                                 <div class="space-y-4">
                                     <div><label class="control-label">Warna Sisi & Teks</label><div class="grid grid-cols-2 gap-2"><div><input id="side-color-picker" type="color" value="#ffffff" class="w-full h-10 p-1 border rounded-md"><label for="side-color-picker" class="text-sm text-center block mt-1">Sisi</label></div><div><input id="text-color-picker" type="color" value="#333333" class="w-full h-10 p-1 border rounded-md"><label for="text-color-picker" class="text-sm text-center block mt-1">Teks</label></div></div></div>
+                                    <div>
+                                        <label for="pattern-select" class="control-label">Pola Desain</label>
+                                        <select id="pattern-select">
+                                            <option value="none">Tidak Ada</option>
+                                            <option value="stripes">Garis-garis (Stripes)</option>
+                                            <option value="polkadots">Polkadot</option>
+                                            <option value="checkered">Kotak-kotak (Checkered)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="pattern-color-picker" class="control-label">Warna Pola</label>
+                                        <div class="flex items-center">
+                                            <input id="pattern-color-picker" type="color" value="#e0e0e0" class="w-10 h-10 p-1 border rounded-md mr-2">
+                                            <span class="text-sm text-gray-600">Pilih warna untuk motif pola</span>
+                                        </div>
+                                    </div>
                                     <div><label for="light-intensity-slider" class="control-label">Intensitas Cahaya: <span id="light-intensity-value">100</span>%</label><input id="light-intensity-slider" type="range" min="0.2" max="2.5" step="0.1" value="1.5"></div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Tombol Aksi -->
-                        <div class="p-4 bg-gray-50 space-y-2">
+                        <!-- Tombol Aksi & Fitur Baru -->
+                        <div class="p-4 bg-gray-50 space-y-4">
+                            <!-- Fitur Baru: Inspirasi Tema -->
+                            <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-3">Inspirasi Tema Cepat</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button onclick="applyTheme('eco')" class="flex flex-col items-center justify-center p-2 rounded-md hover:bg-green-50 transition border border-transparent hover:border-green-200">
+                                        <div class="w-6 h-6 rounded-full bg-[#b08a5f] mb-1"></div>
+                                        <span class="text-[10px] font-medium text-gray-600">Natural</span>
+                                    </button>
+                                    <button onclick="applyTheme('luxury')" class="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-50 transition border border-transparent hover:border-gray-200">
+                                        <div class="w-6 h-6 rounded-full bg-black mb-1 border border-gray-200"></div>
+                                        <span class="text-[10px] font-medium text-gray-600">Mewah</span>
+                                    </button>
+                                    <button onclick="applyTheme('fun')" class="flex flex-col items-center justify-center p-2 rounded-md hover:bg-pink-50 transition border border-transparent hover:border-pink-200">
+                                        <div class="w-6 h-6 rounded-full bg-pink-400 mb-1"></div>
+                                        <span class="text-[10px] font-medium text-gray-600">Ceria</span>
+                                    </button>
+                                </div>
+                            </div>
+
                              <button id="quote-button" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-full hover:bg-green-700 transition flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5.05a2.5 2.5 0 014.9 0V8a1 1 0 00-1-1h-3z" /></svg>
                                 Minta Penawaran Harga
@@ -728,9 +532,6 @@
                     <div class="md:col-span-2 relative">
                         <div id="mockup-canvas-container" class="shadow-inner"></div>
                          <div class="absolute top-4 right-4 flex space-x-2">
-                            <button id="dieline-view-btn" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition opacity-50 cursor-not-allowed" title="Tampilan Datar (segera hadir)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v4m0 0h-4m4 0l-5-5" /></svg>
-                            </button>
                             <button id="animate-box-btn" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition" title="Animasi Buka/Tutup">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0l7-4 7 4" /></svg>
                             </button>
@@ -777,20 +578,330 @@
                     <p class="mt-6 text-gray-700 max-w-4xl mx-auto text-base md:text-lg font-semibold">Mari wujudkan kemasan yang merepresentasikan kualitas produk Anda. Diskusikan ide Anda dengan kami sekarang.</p>
                 </div>
 
-                <!-- Klien Kami Section -->
+                <!-- KLIEN KAMI (3D FLIP CARDS) -->
+        <section id="klien" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
                 <div class="text-center mb-12">
-                    <h3 class="text-2xl font-bold section-title">Klien Kami</h3>
-                    <p class="mt-2 text-gray-600 section-subtitle">Kami bangga menjadi partner bagi berbagai brand untuk tumbuh bersama. Silahkan bisa klik brand untuk melihat produk kemasan Percetakan Arjuna.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Klien Kami</h2>
+                    <p class="mt-2 text-gray-600">Arahkan kursor pada logo untuk melihat hasil cetak kemasan asli.</p>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+A" alt="Logo Brand Klien A"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+A" alt="Produk Brand A"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+B" alt="Logo Brand Klien B"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+B" alt="Produk Brand B"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+C" alt="Logo Brand Klien C"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+C" alt="Produk Brand C"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+D" alt="Logo Brand Klien D"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+D" alt="Produk Brand D"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+E" alt="Logo Brand Klien E"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+E" alt="Produk Brand E"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+F" alt="Logo Brand Klien F"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+F" alt="Produk Brand F"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+G" alt="Logo Brand Klien G"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+G" alt="Produk Brand G"></div></div>
-                    <div class="client-card bg-white rounded-lg shadow-md aspect-square"><div class="client-logo"><img src="https://placehold.co/200x200/cccccc/333333?text=Brand+H" alt="Logo Brand Klien H"></div><div class="client-product"><img src="https://placehold.co/400x400/e0e7ff/334155?text=Produk+H" alt="Produk Brand H"></div></div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+                    
+                    <!-- Card 1 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+A" alt="Logo A" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/1e293b/ffffff?text=Produk+A" alt="Produk A">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Kopi Senja</h4>
+                                    <p class="text-xs opacity-80">Box Standing Pouch</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+B" alt="Logo B" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/ec4899/ffffff?text=Produk+B" alt="Produk B">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Donat Lumer</h4>
+                                    <p class="text-xs opacity-80">Box Isi 6</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+C" alt="Logo C" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/eab308/ffffff?text=Produk+C" alt="Produk C">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Keripik Mantap</h4>
+                                    <p class="text-xs opacity-80">Pouch Foil</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+D" alt="Logo D" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/22c55e/ffffff?text=Produk+D" alt="Produk D">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Salad Segar</h4>
+                                    <p class="text-xs opacity-80">Bowl Paper</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+E" alt="Logo E" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/6366f1/ffffff?text=Produk+E" alt="Produk E">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Bakpia Pathok</h4>
+                                    <p class="text-xs opacity-80">Slide Box</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+F" alt="Logo F" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/f97316/ffffff?text=Produk+F" alt="Produk F">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Fried Chicken</h4>
+                                    <p class="text-xs opacity-80">Paper Box L</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 7 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+G" alt="Logo G" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/ef4444/ffffff?text=Produk+G" alt="Produk G">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Sambal Nyot</h4>
+                                    <p class="text-xs opacity-80">Label Jar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 8 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+H" alt="Logo H" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/8b5cf6/ffffff?text=Produk+H" alt="Produk H">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Glow Skincare</h4>
+                                    <p class="text-xs opacity-80">Hardbox Premium</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimoni Section (2D Infinite Marquee) -->
+        <section id="testimoni" class="py-20 bg-gradient-to-b from-white to-blue-50 overflow-hidden">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Apa Kata Mereka?</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Kepuasan pelanggan adalah prioritas utama kami.</p>
+                </div>
+                
+                <div class="testimonial-marquee-container">
+                    <div class="testimonial-track">
+                        <!-- Testimoni 1 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-600 shadow-sm">B</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Budi Santoso</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kopi Senja"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Hasil cetaknya tajam banget, bahannya juga kokoh. Pas banget buat packaging kopi saya. Pelayanan ramah dan cepat!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 2 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center text-xl font-bold text-pink-600 shadow-sm">S</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Siti Aminah</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Donat Lumer"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Suka banget sama fitur desain 3D di websitenya, jadi bisa bayangin dulu sebelum cetak. Hasil aslinya sesuai ekspektasi."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 3 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-xl font-bold text-green-600 shadow-sm">R</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Rizky Pratama</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">UMKM "Keripik Mantap"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Harganya bersaing tapi kualitasnya premium. Pengiriman juga aman sampai ke Jakarta. Recommended!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 4 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-xl font-bold text-purple-600 shadow-sm">A</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Andi Wijaya</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Snack Kriuk"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Desain customnya sangat membantu branding produk saya. Penjualan meningkat sejak ganti kemasan di sini."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 5 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-xl font-bold text-orange-600 shadow-sm">D</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Dewi Lestari</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kue Basah Bu Dewi"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Pelayanan sangat memuaskan, admin fast respon dan sangat membantu. Kualitas cetakan juga oke banget."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+
+                        <!-- DUPLICATED CARDS FOR SEAMLESS LOOP -->
+                        <!-- Testimoni 1 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-600 shadow-sm">B</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Budi Santoso</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kopi Senja"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Hasil cetaknya tajam banget, bahannya juga kokoh. Pas banget buat packaging kopi saya. Pelayanan ramah dan cepat!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 2 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center text-xl font-bold text-pink-600 shadow-sm">S</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Siti Aminah</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Donat Lumer"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Suka banget sama fitur desain 3D di websitenya, jadi bisa bayangin dulu sebelum cetak. Hasil aslinya sesuai ekspektasi."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 3 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-xl font-bold text-green-600 shadow-sm">R</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Rizky Pratama</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">UMKM "Keripik Mantap"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Harganya bersaing tapi kualitasnya premium. Pengiriman juga aman sampai ke Jakarta. Recommended!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 4 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-xl font-bold text-purple-600 shadow-sm">A</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Andi Wijaya</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Snack Kriuk"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Desain customnya sangat membantu branding produk saya. Penjualan meningkat sejak ganti kemasan di sini."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 5 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-xl font-bold text-orange-600 shadow-sm">D</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Dewi Lestari</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kue Basah Bu Dewi"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Pelayanan sangat memuaskan, admin fast respon dan sangat membantu. Kualitas cetakan juga oke banget."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FAQ Section (NEW) -->
+        <section id="faq" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Pertanyaan Umum (FAQ)</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Jawaban untuk pertanyaan yang sering diajukan pelanggan kami.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Berapa minimal order (MOQ) di Percetakan Arjuna?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Minimal pemesanan kami mulai dari 500 pcs untuk kemasan custom. Ini sangat cocok untuk UMKM yang baru memulai usaha dan tidak ingin menimbun stok terlalu banyak.
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Berapa lama proses produksi kemasan?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Estimasi waktu produksi standar adalah 7-14 hari kerja setelah desain disetujui (ACC). Waktu bisa bervariasi tergantung antrian dan kompleksitas finishing (misal: hot foil atau emboss membutuhkan waktu tambahan).
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Apakah bisa bantu desainkan kemasan?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Tentu! Kami menyediakan layanan desain GRATIS untuk setiap pemesanan cetak kemasan. Tim desainer kami akan membantu mewujudkan visi brand Anda.
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Apakah melayani pengiriman ke luar kota?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Ya, kami melayani pengiriman ke seluruh Indonesia menggunakan berbagai ekspedisi terpercaya (JNE, J&T, Cargo, dll) dengan packing aman.
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -826,21 +937,36 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white">
-        <div class="container mx-auto px-6 py-8 max-w-7xl">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-center md:text-left mb-4 md:mb-0">
-                    <h3 class="text-xl font-bold">Percetakan Arjuna</h3>
-                    <p class="text-gray-400">Dusun Nglarang No.44, RT.05/RW.35, Wedomartani, Ngemplak, Sleman, Yogyakarta 55584</p>
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-800 pb-8 mb-8">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2 text-white">Percetakan Arjuna</h3>
+                    <p class="text-gray-400">Solusi Kemasan UMKM Terpercaya</p>
+                    <p class="text-gray-500 text-sm mt-1">Dusun Nglarang No.44, RT.05/RW.35, Wedomartani, Sleman</p>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="https://wa.me/6282226903074" target="_blank" class="text-gray-400 hover:text-white">WhatsApp</a>
-                    <a href="https://shopee.co.id/percetakan_arjuna?entryPoint=ShopBySearch&searchKeyword=percetakan%20arjuna" target="_blank" class="text-gray-400 hover:text-white">Shopee</a>
-                    <a href="#tentang" class="text-gray-400 hover:text-white">Tentang Kami</a>
+                <div class="flex space-x-8">
+                    <a href="https://wa.me/6282226903074" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">WhatsApp</a>
+                    <a href="https://shopee.co.id/percetakan_arjuna?entryPoint=ShopBySearch&searchKeyword=percetakan%20arjuna" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">Shopee</a>
+                    <a href="#tentang" class="text-gray-400 hover:text-white transition-colors duration-300">Tentang Kami</a>
                 </div>
             </div>
-            <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
-                © 2025 Percetakan Arjuna. All Rights Reserved. <span class="credit-line">by Dhiya'Ulhag Zulfa Zain</span>
+            
+            <!-- Modern Developer Credit Section (Luxurious & Credible) -->
+            <div class="flex flex-col items-center justify-center">
+                <p class="text-gray-600 text-xs mb-4 uppercase tracking-widest">&copy; 2025 Percetakan Arjuna. All Rights Reserved.</p>
+                
+                <a href="#" class="dev-badge group" title="Klik untuk bekerja sama">
+                    <div class="dev-avatar">
+                        <!-- Placeholder Avatar (Initials) -->
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white font-bold text-xs border border-gray-600">DZ</div>
+                        <div class="dev-status-dot"></div>
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <span class="dev-role">Designed & Developed by</span>
+                        <span class="dev-name">Dhiya'Ulhag Zulfa Zain</span>
+                    </div>
+                </a>
             </div>
         </div>
     </footer>
@@ -855,25 +981,43 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.001.004 1.64-5.993a.536.536 0 0 1 .524-.438h.004a.532.532 0 0 1 .433.26z"/></svg>
     </a>
 
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
     <!-- Modal untuk pesan kesalahan -->
     <div id="modal-container" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-[999] hidden"><div class="bg-white p-6 rounded-lg shadow-xl text-center"><p class="text-gray-800 text-lg font-semibold mb-4">Mohon maaf, aksi penyalinan konten tidak diizinkan.</p><button id="modal-close-btn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Tutup</button></div></div>
     
     <!-- Modal untuk Load Session -->
     <div id="load-session-modal" class="hidden modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[1000] opacity-0"><div class="bg-white p-8 rounded-lg shadow-2xl text-center max-w-sm mx-4"><h3 class="text-xl font-bold mb-4">Desain Ditemukan</h3><p class="text-gray-600 mb-6">Kami menemukan desain yang telah Anda simpan sebelumnya. Apakah Anda ingin melanjutkannya?</p><div class="flex justify-center space-x-4"><button id="load-yes-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition">Ya, Lanjutkan</button><button id="load-no-btn" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition">Mulai Baru</button></div></div></div>
 
-    <!-- Modal untuk Minta Penawaran -->
+    <!-- Modal untuk Minta Penawaran (Simplified) -->
     <div id="quote-modal" class="hidden modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[1000] opacity-0">
         <div class="bg-white p-8 rounded-lg shadow-2xl max-w-lg mx-4 w-full">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold">Minta Penawaran Harga</h3>
                 <button id="quote-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
             </div>
-            <p class="text-gray-600 mb-6">Lengkapi data berikut untuk mengirimkan desain Anda langsung ke tim kami via WhatsApp.</p>
+            <p class="text-gray-600 mb-4">Lengkapi data berikut untuk konfirmasi pemesanan via WhatsApp.</p>
             <form id="quote-form" class="space-y-4">
                 <div><label for="quote-name" class="control-label">Nama Anda</label><input type="text" id="quote-name" required class="w-full"></div>
-                <div><label for="quote-whatsapp" class="control-label">No. WhatsApp (contoh: 628123456789)</label><input type="tel" id="quote-whatsapp" required class="w-full" placeholder="62..."></div>
-                <div><label for="quote-quantity" class="control-label">Jumlah Pesanan (pcs)</label><select id="quote-quantity" class="w-full"><option>500</option><option>1000</option><option>2000</option><option>5000+</option></select></div>
-                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-full hover:bg-green-700 transition">Kirim ke WhatsApp</button>
+                <div><label for="quote-whatsapp" class="control-label">No. WhatsApp</label><input type="tel" id="quote-whatsapp" required class="w-full" placeholder="62..."></div>
+                <div>
+                    <label for="quote-quantity" class="control-label">Jumlah Pesanan (pcs)</label>
+                    <select id="quote-quantity" class="w-full p-2 border rounded-md border-gray-300">
+                        <option value="500">500 pcs</option>
+                        <option value="1000">1.000 pcs</option>
+                        <option value="2000">2.000 pcs</option>
+                        <option value="5000">5.000 pcs</option>
+                        <option value="10000">10.000+ pcs</option>
+                    </select>
+                </div>
+                <div class="bg-gray-50 p-3 rounded text-sm text-gray-600">
+                    Detail spesifikasi desain akan otomatis terlampir saat Anda mengirim pesan.
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-full hover:bg-green-700 transition shadow-lg mt-4 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.001.004 1.64-5.993a.536.536 0 0 1 .524-.438h.004a.532.532 0 0 1 .433.26z"/></svg>
+                    Kirim Pesanan via WhatsApp
+                </button>
             </form>
         </div>
     </div>
@@ -1039,38 +1183,195 @@
                 });
             });
 
-            // Accordion Logic
+            // Accordion Logic (Shared for 3D Viewer & FAQ)
             document.querySelectorAll('.accordion-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const content = button.nextElementSibling;
-                    const isActive = button.classList.contains('active');
-                    if (!isActive) {
-                       button.classList.add('active');
-                       content.style.display = 'block';
+                    const arrow = button.querySelector('.accordion-arrow');
+                    
+                    // Simple Toggle logic
+                    const isActive = !content.classList.contains('hidden');
+                    
+                    if (isActive) {
+                        content.classList.add('hidden');
+                        if(arrow) arrow.style.transform = 'rotate(0deg)';
                     } else {
-                       button.classList.remove('active');
-                       content.style.display = 'none';
+                        content.classList.remove('hidden');
+                        if(arrow) arrow.style.transform = 'rotate(180deg)';
                     }
                 });
             });
 
+            // --- TOAST NOTIFICATION FUNCTION ---
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                let icon = '';
+                if (type === 'success') icon = '<svg class="w-6 h-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                else if (type === 'error') icon = '<svg class="w-6 h-6 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+                else icon = '<svg class="w-6 h-6 text-blue-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+
+                toast.innerHTML = `
+                    <div class="flex items-center">
+                        ${icon}
+                        <span class="font-medium text-gray-800">${message}</span>
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                // Auto remove
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
             // --- SCRIPT 3D MOCKUP VIEWER ---
             const mockupSection = document.getElementById('mockup-viewer');
             if (mockupSection && typeof THREE !== 'undefined' && typeof THREE.OrbitControls !== 'undefined') {
-                const ui = { container: document.getElementById('mockup-canvas-container'), sizePresets: document.getElementById('size-presets'), customWidth: document.getElementById('custom-width'), customHeight: document.getElementById('custom-height'), customDepth: document.getElementById('custom-depth'), materialSelect: document.getElementById('material-select'), finishingSelect: document.getElementById('finishing-select'), foodGradeLining: document.getElementById('food-grade-lining'), environmentSelect: document.getElementById('environment-select'), sideColorPicker: document.getElementById('side-color-picker'), contentSideSelect: document.getElementById('content-side-select'), contentTypeRadios: document.querySelectorAll('input[name="content-type"]'), contentControls: document.getElementById('content-controls-container'), logoControls: document.getElementById('logo-controls-container'), textControls: document.getElementById('text-controls-container'), logoUpload: document.getElementById('logo-upload'), logoScaleSlider: document.getElementById('logo-scale-slider'), logoScaleValue: document.getElementById('logo-scale-value'), textInput: document.getElementById('text-input'), fontSelect: document.getElementById('font-select'), fontSizeSlider: document.getElementById('font-size-slider'), fontSizeValue: document.getElementById('font-size-value'), textColorPicker: document.getElementById('text-color-picker'), premiumFinishSelect: document.getElementById('premium-finish-select'), contentOffsetX: document.getElementById('content-offset-x'), contentOffsetY: document.getElementById('content-offset-y'), offsetXValue: document.getElementById('offset-x-value'), offsetYValue: document.getElementById('offset-y-value'), lightIntensitySlider: document.getElementById('light-intensity-slider'), lightIntensityValue: document.getElementById('light-intensity-value'), animateBoxBtn: document.getElementById('animate-box-btn'), dielineViewBtn: document.getElementById('dieline-view-btn'), captureButton: document.getElementById('capture-button'), arButton: document.getElementById('ar-button'), quoteButton: document.getElementById('quote-button'), saveButton: document.getElementById('save-button'), resetButton: document.getElementById('reset-button'), loadModal: document.getElementById('load-session-modal'), loadYesBtn: document.getElementById('load-yes-btn'), loadNoBtn: document.getElementById('load-no-btn'), quoteModal: document.getElementById('quote-modal'), quoteForm: document.getElementById('quote-form'), quoteCloseBtn: document.getElementById('quote-close-btn'), geminiModal: document.getElementById('gemini-modal'), geminiCloseBtn: document.getElementById('gemini-close-btn'), geminiTaglineBtn: document.getElementById('gemini-tagline-btn'), geminiForm: document.getElementById('gemini-form'), geminiProductType: document.getElementById('gemini-product-type'), geminiPromptView: document.getElementById('gemini-prompt-view'), geminiResultsView: document.getElementById('gemini-results-view'), geminiLoading: document.getElementById('gemini-loading'), geminiResultsList: document.getElementById('gemini-results-list'), geminiBackBtn: document.getElementById('gemini-back-btn'), };
+                const ui = { 
+                    container: document.getElementById('mockup-canvas-container'), 
+                    sizePresets: document.getElementById('size-presets'), 
+                    customWidth: document.getElementById('custom-width'), 
+                    customHeight: document.getElementById('custom-height'), 
+                    customDepth: document.getElementById('custom-depth'), 
+                    materialSelect: document.getElementById('material-select'), 
+                    finishingSelect: document.getElementById('finishing-select'), 
+                    foodGradeLining: document.getElementById('food-grade-lining'), 
+                    environmentSelect: document.getElementById('environment-select'), 
+                    sideColorPicker: document.getElementById('side-color-picker'), 
+                    contentSideSelect: document.getElementById('content-side-select'), 
+                    contentTypeRadios: document.querySelectorAll('input[name="content-type"]'), 
+                    contentControls: document.getElementById('content-controls-container'), 
+                    logoControls: document.getElementById('logo-controls-container'), 
+                    textControls: document.getElementById('text-controls-container'), 
+                    stickerControls: document.getElementById('sticker-controls-container'),
+                    logoUpload: document.getElementById('logo-upload'), 
+                    logoScaleSlider: document.getElementById('logo-scale-slider'), 
+                    logoScaleValue: document.getElementById('logo-scale-value'), 
+                    stickerScaleSlider: document.getElementById('sticker-scale-slider'), 
+                    stickerScaleValue: document.getElementById('sticker-scale-value'), 
+                    textInput: document.getElementById('text-input'), 
+                    fontSelect: document.getElementById('font-select'), 
+                    fontSizeSlider: document.getElementById('font-size-slider'), 
+                    fontSizeValue: document.getElementById('font-size-value'), 
+                    textColorPicker: document.getElementById('text-color-picker'), 
+                    premiumFinishSelect: document.getElementById('premium-finish-select'), 
+                    contentOffsetX: document.getElementById('content-offset-x'), 
+                    contentOffsetY: document.getElementById('content-offset-y'), 
+                    offsetXValue: document.getElementById('offset-x-value'), 
+                    offsetYValue: document.getElementById('offset-y-value'), 
+                    lightIntensitySlider: document.getElementById('light-intensity-slider'), 
+                    lightIntensityValue: document.getElementById('light-intensity-value'), 
+                    animateBoxBtn: document.getElementById('animate-box-btn'), 
+                    captureButton: document.getElementById('capture-button'), 
+                    arButton: document.getElementById('ar-button'), 
+                    quoteButton: document.getElementById('quote-button'), 
+                    saveButton: document.getElementById('save-button'), 
+                    resetButton: document.getElementById('reset-button'), 
+                    loadModal: document.getElementById('load-session-modal'), 
+                    loadYesBtn: document.getElementById('load-yes-btn'), 
+                    loadNoBtn: document.getElementById('load-no-btn'), 
+                    quoteModal: document.getElementById('quote-modal'), 
+                    quoteForm: document.getElementById('quote-form'), 
+                    quoteCloseBtn: document.getElementById('quote-close-btn'), 
+                    quoteQuantity: document.getElementById('quote-quantity'),
+                    patternSelect: document.getElementById('pattern-select'),
+                    patternColorPicker: document.getElementById('pattern-color-picker'),
+                    stickerBtns: document.querySelectorAll('.sticker-btn'),
+                    
+                    // Gemini UI elements
+                    geminiModal: document.getElementById('gemini-modal'), 
+                    geminiCloseBtn: document.getElementById('gemini-close-btn'), 
+                    geminiTaglineBtn: document.getElementById('gemini-tagline-btn'), 
+                    geminiForm: document.getElementById('gemini-form'), 
+                    geminiProductType: document.getElementById('gemini-product-type'), 
+                    geminiPromptView: document.getElementById('gemini-prompt-view'), 
+                    geminiResultsView: document.getElementById('gemini-results-view'), 
+                    geminiLoading: document.getElementById('gemini-loading'), 
+                    geminiResultsList: document.getElementById('gemini-results-list'), 
+                    geminiBackBtn: document.getElementById('gemini-back-btn'),
+                };
+                
                 let scene, camera, renderer, boxGroup, controls, envMap, groundPlane, composer, outlinePass, saoPass, lidPivot;
                 let textures = {};
                 const sideNames = ["Tutup Atas", "Dasar", "Depan", "Belakang", "Kanan", "Kiri"];
                 let boxParts = []; 
-                let isDieLineView = false;
                 let selectedPart = null;
-                let originalCameraPos = new THREE.Vector3(2.5, 2, 4);
-                let originalControlsTarget = new THREE.Vector3(0, 0, 0);
+                let logoImage = null; 
                 
-                const defaultState = { width: 20, height: 7, depth: 12, material: 'ivory', finishing: 'standar', foodGradeLining: false, environment: 'studio', lightIntensity: 1.5, sideProperties: sideNames.map(() => ({ color: '#ffffff', contentType: 'none', premiumFinish: 'none', logoScale: 1.0, text: 'Teks Anda', font: 'Poppins', fontSize: 48, textColor: '#333333', offsetX: 0, offsetY: 0 })) };
+                // Default state with sticker support
+                const defaultState = { 
+                    width: 20, 
+                    height: 7, 
+                    depth: 12, 
+                    material: 'ivory', 
+                    finishing: 'standar', 
+                    foodGradeLining: false, 
+                    environment: 'studio', 
+                    lightIntensity: 1.5, 
+                    sideProperties: sideNames.map(() => ({ 
+                        color: '#ffffff', 
+                        contentType: 'none', // 'none', 'logo', 'text', 'sticker'
+                        stickerType: '', // 'halal', 'recycle', 'natural', 'thankyou'
+                        premiumFinish: 'none', 
+                        logoScale: 1.0, 
+                        stickerScale: 1.0,
+                        text: 'Teks Anda', 
+                        font: 'Poppins', 
+                        fontSize: 48, 
+                        textColor: '#333333', 
+                        offsetX: 0, 
+                        offsetY: 0,
+                        patternType: 'none',
+                        patternColor: '#e0e0e0'
+                    })) 
+                };
                 let state = JSON.parse(JSON.stringify(defaultState));
+
+                // --- THEME LOGIC ---
+                window.applyTheme = function(theme) {
+                    if (theme === 'eco') {
+                        state.material = 'kraft';
+                        state.finishing = 'standar';
+                        state.sideProperties.forEach(p => {
+                            p.color = '#b08a5f';
+                            p.patternType = 'none';
+                            p.textColor = '#333333';
+                            p.premiumFinish = 'none'; 
+                        });
+                        showToast('Tema Natural diterapkan!', 'success');
+                    } else if (theme === 'luxury') {
+                        state.material = 'ivory';
+                        state.finishing = 'glossy';
+                        state.sideProperties.forEach(p => {
+                            p.color = '#1a1a1a'; 
+                            p.patternType = 'none';
+                            p.textColor = '#FFD700'; 
+                            p.premiumFinish = 'foilEmas';
+                        });
+                        showToast('Tema Mewah diterapkan!', 'success');
+                    } else if (theme === 'fun') {
+                        state.material = 'ivory';
+                        state.finishing = 'doff';
+                        state.sideProperties.forEach(p => {
+                            p.color = '#ffffff';
+                            p.patternType = 'polkadots';
+                            p.patternColor = '#f472b6'; 
+                            p.textColor = '#333333';
+                            p.premiumFinish = 'none'; 
+                        });
+                        showToast('Tema Ceria diterapkan!', 'success');
+                    }
+                    updateUIFromState();
+                    updateBoxModel();
+                };
                 
                 function init3D() {
+                    // (Same init code as before)
                     scene = new THREE.Scene();
                     scene.background = new THREE.Color(0xdde2e8);
                     scene.fog = new THREE.Fog(0xdde2e8, 10, 30);
@@ -1094,7 +1395,6 @@
                     controls.maxDistance = 15;
                     controls.target.set(0, 0, 0);
                     
-                    // --- Improved Lighting Setup ---
                     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
                     hemiLight.position.set(0, 20, 0);
                     scene.add(hemiLight);
@@ -1113,7 +1413,6 @@
                     fillLight.position.set(-5, 3, -5);
                     scene.add(fillLight);
                     
-                    // --- Studio Environment ---
                     groundPlane = new THREE.Mesh(
                         new THREE.PlaneGeometry(30, 30), 
                         new THREE.MeshStandardMaterial({ color: 0xc8ced5, roughness: 0.8 })
@@ -1128,15 +1427,15 @@
                     envMap = new THREE.CubeTextureLoader().load(urls);
                     
                     const loader = new THREE.TextureLoader();
-                    loader.setCrossOrigin(''); // Allow loading from other domains
-                    textures.logo = loader.load('https://placehold.co/300x200/e2e8f0/334155?text=Logo+Anda', t => { t.encoding = THREE.sRGBEncoding; });
+                    loader.setCrossOrigin(''); 
+                    textures.logo = loader.load('https://placehold.co/300x200/e2e8f0/334155?text=Logo+Anda', t => { 
+                        t.encoding = THREE.sRGBEncoding; 
+                        logoImage = t.image; 
+                    });
                     textures.wood = loader.load('https://threejs.org/examples/textures/hardwood2_diffuse.jpg', t => { t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(8, 8); updateAppearance()});
-                    textures.marble = loader.load('https://threejs.org/examples/textures/marble.jpg', t => { t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 4); updateAppearance()});
-                    // Removed texture-based materials, will use color
                     textures.kraft = null; 
                     textures.duplex = null;
 
-                    // Post-processing
                     composer = new THREE.EffectComposer(renderer);
                     const renderPass = new THREE.RenderPass(scene, camera);
                     composer.addPass(renderPass);
@@ -1160,44 +1459,228 @@
                     effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
                     composer.addPass(effectFXAA);
                     
+                    // Check local storage
+                    checkForSavedState(); 
                     generateSideSelectors();
-                    checkForSavedState();
+                    
+                    // Add grain/noise canvas to all textures once (optimization)
+                    generateGrainTexture();
+
                     updateBoxModel();
                     setupEventListeners();
                     renderer.setAnimationLoop(renderLoop);
                 }
                 
+                let grainTexture = null;
+                function generateGrainTexture() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 512; canvas.height = 512;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Fill with noise
+                    const imageData = ctx.createImageData(512, 512);
+                    const buffer = new Uint32Array(imageData.data.buffer);
+                    for(let i = 0; i < buffer.length; i++) {
+                        if(Math.random() < 0.5) {
+                            // Slight grey noise
+                            buffer[i] = 0x10000000; // A very faint alpha noise
+                        }
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                    
+                    // This texture will be overlayed on materials to give paper feel
+                    // Actually, better to draw it in createSideTexture
+                }
+                
                 function generateSideSelectors() { ui.contentSideSelect.innerHTML = sideNames.map((name, i) => `<option value="${i}">${name}</option>`).join(''); }
 
-                function createTextTexture(sideIndex, forBumpMap = false) {
+                // New Unified Texture Generator (Pattern + Content + Paper Grain)
+                function createSideTexture(sideIndex, forBumpMap = false) {
                     const props = state.sideProperties[sideIndex];
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    canvas.width = 512; canvas.height = 512;
+                    const size = 1024; // Higher res for crisp text
+                    canvas.width = size; canvas.height = size;
                     
+                    // 1. Draw Background (Solid Color or Pattern)
                     if (!forBumpMap) {
-                        // FIX: Use state.material to determine background color
-                        let bgColor = props.color; // Default for ivory
-                        if (state.material === 'kraft') {
-                            bgColor = '#b08a5f'; // Kraft brown
-                        } else if (state.material === 'duplex') {
-                            bgColor = '#e0e0e0'; // Duplex grey
-                        }
+                        let bgColor = props.color;
+                        if (state.material === 'kraft') bgColor = '#b08a5f';
+                        else if (state.material === 'duplex') bgColor = '#e0e0e0';
+                        
                         ctx.fillStyle = bgColor;
-                        // END FIX
-                        ctx.fillRect(0, 0, 512, 512);
-                        ctx.fillStyle = props.textColor;
+                        ctx.fillRect(0, 0, size, size);
+
+                        if (props.patternType !== 'none') {
+                            drawPattern(ctx, size, size, props.patternType, props.patternColor);
+                        }
+                        
+                        // Add Paper Grain
+                        addNoise(ctx, size, size, 0.05); // 5% noise
+
+                        ctx.fillStyle = props.textColor; 
                     } else {
-                        ctx.fillStyle = 'black'; ctx.fillRect(0,0,512,512);
+                        ctx.fillStyle = 'black'; 
+                        ctx.fillRect(0, 0, size, size);
                         ctx.fillStyle = 'white';
                     }
-                    ctx.font = `bold ${props.fontSize}px ${props.font}`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(props.text, 256 + (props.offsetX/100 * 256), 256 - (props.offsetY/100 * 256));
+
+                    // 2. Draw Content (Text, Logo, or Sticker)
+                    if (props.contentType === 'text') {
+                        ctx.font = `bold ${props.fontSize * 2}px ${props.font}`; // Scale font for high res
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(props.text, size/2 + (props.offsetX/100 * size), size/2 - (props.offsetY/100 * size));
+                    } else if (props.contentType === 'logo' && logoImage) {
+                        const scale = props.logoScale;
+                        const imgW = logoImage.width;
+                        const imgH = logoImage.height;
+                        const aspect = imgW / imgH;
+                        let targetW = size * scale;
+                        let targetH = targetW / aspect;
+                        const x = (size - targetW) / 2 + (props.offsetX/100 * size);
+                        const y = (size - targetH) / 2 - (props.offsetY/100 * size); 
+                        ctx.drawImage(logoImage, x, y, targetW, targetH);
+                    } else if (props.contentType === 'sticker' && props.stickerType) {
+                        drawSticker(ctx, props.stickerType, size, props.stickerScale, props.offsetX, props.offsetY);
+                    }
+
                     const texture = new THREE.CanvasTexture(canvas);
                     texture.encoding = THREE.sRGBEncoding;
                     return texture;
+                }
+                
+                function addNoise(ctx, w, h, opacity) {
+                    const imageData = ctx.getImageData(0, 0, w, h);
+                    const data = imageData.data;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const grain = (Math.random() - 0.5) * 20; 
+                        // Modify existing color
+                        data[i] = Math.min(255, Math.max(0, data[i] + grain));
+                        data[i+1] = Math.min(255, Math.max(0, data[i+1] + grain));
+                        data[i+2] = Math.min(255, Math.max(0, data[i+2] + grain));
+                        // Alpha stays same
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                }
+
+                function drawSticker(ctx, type, canvasSize, scale, offX, offY) {
+                    const cx = canvasSize / 2 + (offX / 100 * canvasSize);
+                    const cy = canvasSize / 2 - (offY / 100 * canvasSize);
+                    const size = 400 * scale; // Scaled for 1024 canvas
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+
+                    // Sticker Shadow Effect
+                    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+                    ctx.shadowBlur = 15;
+                    ctx.shadowOffsetX = 4;
+                    ctx.shadowOffsetY = 4;
+
+                    if (type === 'halal') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2 + 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = "white";
+                        ctx.fill();
+                        
+                        ctx.shadowColor = "transparent"; 
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+                        ctx.fillStyle = "#009900";
+                        ctx.fill();
+                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = "white";
+                        ctx.stroke();
+                        
+                        ctx.fillStyle = "white";
+                        ctx.font = `bold ${size/3}px Arial`;
+                        ctx.fillText("HALAL", 0, 0);
+                        
+                    } else if (type === 'recycle') {
+                         ctx.font = `${size}px Arial`;
+                         ctx.fillStyle = "white";
+                         ctx.fillText("♻️", 0, 0);
+                         
+                         ctx.shadowColor = "transparent";
+                         ctx.fillStyle = "#006600";
+                         ctx.fillText("♻️", 0, 0); 
+                         
+                    } else if (type === 'natural') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2 + 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = "white";
+                        ctx.fill();
+
+                        ctx.shadowColor = "transparent";
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+                        ctx.fillStyle = "#8FBC8F"; 
+                        ctx.fill();
+                        
+                        ctx.font = `${size/2}px Arial`;
+                        ctx.fillText("🌿", 0, -size/6);
+                        
+                        ctx.fillStyle = "white";
+                        ctx.font = `bold ${size/6}px Arial`;
+                        ctx.fillText("100% NATURAL", 0, size/4);
+
+                    } else if (type === 'thankyou') {
+                        ctx.fillStyle = "white";
+                        ctx.font = `italic bold ${size/3}px Georgia`;
+                        ctx.fillText("Thank", 0, -size/5);
+                        ctx.fillText("You", 0, size/5);
+                        ctx.font = `${size/3}px Arial`;
+                        ctx.fillText("❤️", 0, size/1.5);
+                        
+                        ctx.shadowColor = "transparent";
+                        ctx.fillStyle = "#333";
+                        ctx.font = `italic bold ${size/3}px Georgia`;
+                        ctx.fillText("Thank", 0, -size/5);
+                        ctx.fillText("You", 0, size/5);
+                        ctx.font = `${size/3}px Arial`;
+                        ctx.fillText("❤️", 0, size/1.5);
+                    }
+                    ctx.restore();
+                }
+
+                // Helper to draw patterns
+                function drawPattern(ctx, w, h, type, color) {
+                    ctx.fillStyle = color;
+                    if (type === 'stripes') {
+                        const thickness = 40;
+                        const gap = 40;
+                        ctx.save();
+                        ctx.translate(w/2, h/2);
+                        ctx.rotate(Math.PI / 4); 
+                        ctx.translate(-w, -h); 
+                        for (let x = -w; x < w * 3; x += thickness + gap) {
+                            ctx.fillRect(x, -h, thickness, h * 3);
+                        }
+                        ctx.restore();
+                    } else if (type === 'polkadots') {
+                        const radius = 20;
+                        const spacing = 80;
+                        for (let x = 0; x < w; x += spacing) {
+                            for (let y = 0; y < h; y += spacing) {
+                                const offsetX = (y / spacing) % 2 === 0 ? 0 : spacing / 2;
+                                ctx.beginPath();
+                                ctx.arc(x + offsetX, y, radius, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    } else if (type === 'checkered') {
+                        const size = 80;
+                        for (let x = 0; x < w; x += size) {
+                            for (let y = 0; y < h; y += size) {
+                                if (((x/size) + (y/size)) % 2 === 0) {
+                                    ctx.fillRect(x, y, size, size);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 function updateBoxModel() {
@@ -1209,10 +1692,22 @@
                     const h = (state.height || defaultState.height) / 10;
                     const d = (state.depth || defaultState.depth) / 10;
                     
+                    const thickness = 0.03; 
+
                     const createPart = (width, height, name) => {
-                        const geo = new THREE.PlaneGeometry(width, height);
-                        const mat = new THREE.MeshStandardMaterial({ envMap: envMap, side: THREE.DoubleSide });
-                        const part = new THREE.Mesh(geo, mat);
+                        const geo = new THREE.BoxGeometry(width, height, thickness);
+                        const coreColor = '#d2b48c'; 
+                        const coreMat = new THREE.MeshStandardMaterial({ color: coreColor, roughness: 1.0 });
+                        const faceMat = new THREE.MeshStandardMaterial({ envMap: envMap }); 
+                        const innerMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.8 }); 
+
+                        const materials = [
+                            coreMat, coreMat, coreMat, coreMat,
+                            faceMat, 
+                            innerMat 
+                        ];
+
+                        const part = new THREE.Mesh(geo, materials);
                         part.name = name;
                         part.castShadow = true;
                         part.receiveShadow = true;
@@ -1224,44 +1719,45 @@
                     
                     // Box Body
                     const bodyGroup = new THREE.Group();
+                    
                     const base = createPart(w, d, "Dasar");
-                    base.rotation.x = -Math.PI / 2;
-                    base.position.y = -h / 2;
+                    base.rotation.x = -Math.PI / 2; 
+                    base.position.y = -h / 2 + thickness/2;
 
                     const front = createPart(w, h, "Depan");
-                    front.position.z = d / 2;
+                    front.position.z = d / 2 - thickness/2; 
 
                     const back = createPart(w, h, "Belakang");
-                    back.rotation.y = Math.PI;
-                    back.position.z = -d / 2;
+                    back.rotation.y = Math.PI; 
+                    back.position.z = -d / 2 + thickness/2; 
 
-                    const left = createPart(d, h, "Kiri");
+                    const left = createPart(d - thickness*2, h, "Kiri"); 
                     left.rotation.y = -Math.PI / 2;
-                    left.position.x = -w / 2;
+                    left.position.x = -w / 2 + thickness/2;
                     
-                    const right = createPart(d, h, "Kanan");
+                    const right = createPart(d - thickness*2, h, "Kanan"); 
                     right.rotation.y = Math.PI / 2;
-                    right.position.x = w / 2;
+                    right.position.x = w / 2 - thickness/2;
 
                     bodyGroup.add(base, front, back, left, right);
                     
-                    // Lid
                     const lid = createPart(w, d, "Tutup Atas");
-                    lid.rotation.x = Math.PI/2;
+                    lid.rotation.x = -Math.PI/2;
 
-                    // Lid Pivot (Hinge)
                     lidPivot = new THREE.Group();
                     lidPivot.add(lid);
-                    lid.position.z = d / 2; // Move lid forward so it pivots on its back edge
                     
-                    lidPivot.position.y = h / 2;      // Position the pivot at the top
-                    lidPivot.position.z = -d / 2;     // Position the pivot at the back
+                    lid.position.z = d / 2 - thickness/2; 
+                    lid.position.y = 0; 
+                    
+                    lidPivot.position.y = h / 2;      
+                    lidPivot.position.z = -d / 2;     
                     
                     boxGroup.add(bodyGroup, lidPivot);
-                    boxGroup.position.y = h / 2 + 0.001; // Lift the entire box to sit on the ground and avoid z-fighting
+                    
+                    boxGroup.position.y = h / 2 + 0.001; 
                     controls.target.set(0, h / 2, 0);
 
-                    // Simpan posisi & rotasi original
                     boxParts.forEach(part => {
                         part.userData.originalPos = part.position.clone();
                         part.userData.originalRot = part.rotation.clone();
@@ -1279,14 +1775,13 @@
                     const roughness = roughnessValues[state.finishing];
                     const envMapIntensity = state.finishing === 'glossy' ? 1.2 : state.finishing === 'standar' ? 0.6 : 0.2;
                     
-                    // Update environment
                     if(state.environment === 'studio') {
                         groundPlane.material.color.set(0xc8ced5);
                         groundPlane.material.map = null;
                         scene.background = new THREE.Color(0xdde2e8);
                     } else {
                         groundPlane.material.map = textures[state.environment];
-                        groundPlane.material.color.set(0xffffff); // Use texture's color
+                        groundPlane.material.color.set(0xffffff); 
                         scene.background = envMap;
                     }
                     groundPlane.material.needsUpdate = true;
@@ -1295,63 +1790,61 @@
                         const sideIndex = sideNames.indexOf(part.name);
                         if (sideIndex === -1) return;
                         
-                        const material = part.material;
+                        const outerMaterial = part.material[4]; 
+                        const innerMaterial = part.material[5]; 
+                        
                         const sideProps = state.sideProperties[sideIndex];
                         
-                        material.side = THREE.DoubleSide; // Ensure it's always double-sided
+                        let baseColor = sideProps.color; 
+                        if (state.material === 'kraft') baseColor = '#b08a5f'; 
+                        else if (state.material === 'duplex') baseColor = '#e0e0e0';
 
-                        let baseMap = null;
-                        let baseColor = sideProps.color; // Default for ivory '#ffffff'
+                        let hasContent = sideProps.contentType !== 'none';
+                        let hasPattern = sideProps.patternType !== 'none';
 
-                        if (state.material === 'kraft') {
-                            baseColor = '#b08a5f'; // Kraft brown color
-                        } else if (state.material === 'duplex') {
-                            baseColor = '#e0e0e0'; // Duplex grey color
+                        if (hasContent || hasPattern) {
+                            outerMaterial.map = createSideTexture(sideIndex);
+                            outerMaterial.color.set(0xffffff); 
+                        } else {
+                            outerMaterial.map = null;
+                            outerMaterial.color.set(baseColor);
                         }
                         
-                        let contentTexture = null;
-                        if (sideProps.contentType === 'logo') {
-                            contentTexture = textures.logo.clone();
-                            contentTexture.needsUpdate = true;
-                            contentTexture.repeat.set(1 / sideProps.logoScale, 1 / sideProps.logoScale);
-                            contentTexture.offset.set(((1 - (1/sideProps.logoScale)) / 2) - (sideProps.offsetX/100), ((1 - (1/sideProps.logoScale)) / 2) + (sideProps.offsetY/100));
-                        } else if (sideProps.contentType === 'text') {
-                            contentTexture = createTextTexture(sideIndex);
+                        if (state.foodGradeLining) {
+                            innerMaterial.color.set('#f0f0f0'); 
+                            innerMaterial.roughness = 0.2;
+                            innerMaterial.metalness = 0.1;
+                        } else {
+                            innerMaterial.color.set(state.material === 'kraft' ? '#b08a5f' : '#ffffff');
+                            innerMaterial.roughness = 0.8;
+                            innerMaterial.metalness = 0;
                         }
 
-                        material.map = contentTexture; // Set map (null if no content)
-                        material.color.set(contentTexture ? 0xffffff : baseColor); // Use baseColor if no map, otherwise tint map with white
+                        outerMaterial.bumpMap = null; outerMaterial.bumpScale = 0.01; outerMaterial.metalness = 0;
+                        outerMaterial.envMapIntensity = envMapIntensity;
                         
-                        if(part.children.length > 0 && part.children[0].material) {
-                            part.children[0].visible = state.foodGradeLining;
-                            part.children[0].material.needsUpdate = true;
-                        }
-
-                        material.bumpMap = null; material.bumpScale = 0.01; material.metalness = 0;
-                        material.envMapIntensity = envMapIntensity;
-                        
-                        if(sideProps.contentType !== 'none' && (sideProps.premiumFinish === 'emboss' || sideProps.premiumFinish === 'deboss')){
-                            material.bumpMap = (sideProps.contentType === 'logo') ? textures.logo : createTextTexture(sideIndex, true);
-                            material.bumpScale = sideProps.premiumFinish === 'emboss' ? 0.015 : -0.015;
+                        if(hasContent && (sideProps.premiumFinish === 'emboss' || sideProps.premiumFinish === 'deboss')){
+                            outerMaterial.bumpMap = createSideTexture(sideIndex, true);
+                            outerMaterial.bumpScale = sideProps.premiumFinish === 'emboss' ? 0.015 : -0.015;
                         } else if (sideProps.premiumFinish.startsWith('foil')){
-                            material.metalness = 1.0;
-                            material.roughness = 0.15;
-                            material.color.set(sideProps.premiumFinish === 'foilEmas' ? '#FFD700' : '#C0C0C0');
-                            material.map = null; // Foil overrides other textures
+                            outerMaterial.metalness = 1.0;
+                            outerMaterial.roughness = 0.15;
+                            outerMaterial.color.set(sideProps.premiumFinish === 'foilEmas' ? '#FFD700' : '#C0C0C0');
+                            outerMaterial.map = null; 
                         }
                         
                         if(!sideProps.premiumFinish.startsWith('foil')) {
-                            material.roughness = roughness;
+                            outerMaterial.roughness = roughness;
                         }
                         
-                        material.needsUpdate = true;
+                        outerMaterial.needsUpdate = true;
+                        innerMaterial.needsUpdate = true;
                     });
                 }
                 
                 function animateBox(open = true) {
-                    const targetRotation = open ? -Math.PI * (5/6) : 0;
-                    const initialRotation = lidPivot.rotation.x;
-                    animateValue(initialRotation, targetRotation, 1200, (val) => { lidPivot.rotation.x = val; });
+                    const targetPivotRot = open ? -Math.PI * 0.6 : 0;
+                    animateValue(lidPivot.rotation.x, targetPivotRot, 1200, (val) => { lidPivot.rotation.x = val; });
                 }
 
                 function animateValue(start, end, duration, updateCallback) {
@@ -1360,17 +1853,7 @@
                         if (!startTime) startTime = timestamp;
                         const progress = Math.min((timestamp - startTime) / duration, 1);
                         const easedProgress = 0.5 * (1 - Math.cos(progress * Math.PI));
-                        
-                        let currentValue;
-                        if (start instanceof THREE.Vector3) {
-                            currentValue = new THREE.Vector3().lerpVectors(start, end, easedProgress);
-                        } else if (start instanceof THREE.Quaternion) {
-                            currentValue = new THREE.Quaternion().slerpQuaternions(start, end, easedProgress);
-                        } else {
-                            currentValue = start + (end - start) * easedProgress;
-                        }
-                        
-                        updateCallback(currentValue);
+                        updateCallback(start + (end - start) * easedProgress);
                         if (progress < 1) requestAnimationFrame(step);
                     }
                     requestAnimationFrame(step);
@@ -1378,11 +1861,11 @@
 
                 function setupEventListeners() {
                     ui.sizePresets.addEventListener('change', e => {
-                       if (e.target.value === 'custom') return;
-                       const [w,d,h] = e.target.value.split(',').map(parseFloat);
-                       state.width = w; state.depth = d; state.height = h;
-                       updateUIFromState();
-                       updateBoxModel();
+                        if (e.target.value === 'custom') return;
+                        const [w,d,h] = e.target.value.split(',').map(parseFloat);
+                        state.width = w; state.depth = d; state.height = h;
+                        updateUIFromState();
+                        updateBoxModel();
                     });
                     
                     ['customWidth', 'customHeight', 'customDepth', 'materialSelect', 'finishingSelect', 'environmentSelect', 'foodGradeLining'].forEach(id => {
@@ -1400,7 +1883,6 @@
                             state[propName] = value;
                             
                             if (e.target.id === 'materialSelect') {
-                                // Update colors for all sides if material changes
                                 const newColor = (value === 'ivory') ? '#ffffff' : (value === 'kraft' ? '#b08a5f' : '#e0e0e0');
                                 state.sideProperties.forEach(prop => prop.color = newColor);
                                 updateUIFromState();
@@ -1417,22 +1899,65 @@
                         scene.traverse(obj => { if (obj.isLight) obj.intensity = (obj.isHemisphereLight ? 0.6 : 1.0) * intensity; });
                         ui.lightIntensityValue.textContent = Math.round(state.lightIntensity / 2.5 * 100); 
                     });
-                    ui.contentSideSelect.addEventListener('change', updateUIFromState);
+                    
+                    ui.contentSideSelect.addEventListener('change', (e) => {
+                        const sideIndex = parseInt(e.target.value);
+                        const partName = sideNames[sideIndex];
+                        const part = boxParts.find(p => p.name === partName);
+                        if (part) {
+                            selectedPart = part;
+                            outlinePass.selectedObjects = [selectedPart];
+                        }
+                        updateUIFromState();
+                    });
+
                     ui.sideColorPicker.addEventListener('input', e => { if(state.material === 'ivory'){ state.sideProperties[parseInt(ui.contentSideSelect.value)].color = e.target.value; updateAppearance(); } });
                     ui.contentTypeRadios.forEach(radio => radio.addEventListener('change', e => { state.sideProperties[parseInt(ui.contentSideSelect.value)].contentType = e.target.value; updateUIFromState(); updateAppearance(); }));
                     
-                    ['logoScaleSlider', 'contentOffsetX', 'contentOffsetY', 'premiumFinishSelect'].forEach(id => {
+                    ui.stickerBtns.forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            const type = e.target.dataset.sticker;
+                            state.sideProperties[parseInt(ui.contentSideSelect.value)].stickerType = type;
+                            updateAppearance();
+                        });
+                    });
+
+                    ui.patternSelect.addEventListener('change', e => {
+                        state.sideProperties[parseInt(ui.contentSideSelect.value)].patternType = e.target.value;
+                        updateAppearance();
+                    });
+                    ui.patternColorPicker.addEventListener('input', e => {
+                        state.sideProperties[parseInt(ui.contentSideSelect.value)].patternColor = e.target.value;
+                        updateAppearance();
+                    });
+
+                    ['logoScaleSlider', 'stickerScaleSlider', 'contentOffsetX', 'contentOffsetY', 'premiumFinishSelect'].forEach(id => {
                         const eventType = id.includes('Select') ? 'change' : 'input';
                         ui[id].addEventListener(eventType, e => { 
                             const side = state.sideProperties[parseInt(ui.contentSideSelect.value)]; 
                             if(id === 'logoScaleSlider') side.logoScale = parseFloat(e.target.value); 
+                            else if(id === 'stickerScaleSlider') side.stickerScale = parseFloat(e.target.value);
                             else if(id === 'contentOffsetX') side.offsetX = parseInt(e.target.value); 
                             else if (id === 'premiumFinishSelect') side.premiumFinish = e.target.value; 
                             else side.offsetY = parseInt(e.target.value); 
                             updateUIFromState(); updateAppearance(); 
                         });
                     });
-                    ui.logoUpload.addEventListener('change', e => { if(e.target.files[0]) { const reader = new FileReader(); reader.onload = res => { textures.logo.dispose(); textures.logo = new THREE.TextureLoader().load(res.target.result, updateAppearance); }; reader.readAsDataURL(e.target.files[0]); } });
+                    
+                    ui.logoUpload.addEventListener('change', e => { 
+                        if(e.target.files[0]) { 
+                            const reader = new FileReader(); 
+                            reader.onload = res => { 
+                                const img = new Image();
+                                img.src = res.target.result;
+                                img.onload = () => {
+                                    logoImage = img;
+                                    updateAppearance();
+                                };
+                            }; 
+                            reader.readAsDataURL(e.target.files[0]); 
+                        } 
+                    });
                     
                     ['textInput', 'fontSelect', 'fontSizeSlider', 'textColorPicker'].forEach(id => {
                         const eventType = (id === 'textInput' || id.includes('Slider')) ? 'input' : 'change';
@@ -1448,14 +1973,24 @@
                     
                     let boxOpen = false; ui.animateBoxBtn.addEventListener('click', () => { boxOpen = !boxOpen; animateBox(boxOpen); });
                     
-                    ui.dielineViewBtn.addEventListener('click', toggleDieLineView); // Re-enabled this button
-
                     ui.captureButton.addEventListener('click', captureScreenshot);
-                    ui.saveButton.addEventListener('click', saveState);
+                    
+                    ui.saveButton.addEventListener('click', () => {
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        saveState();
+                        showToast('Desain Anda berhasil disimpan di browser!', 'success');
+                    });
+                    
                     ui.resetButton.addEventListener('click', resetState);
                     ui.loadYesBtn.addEventListener('click', () => { loadState(JSON.parse(localStorage.getItem('arjunaMockupDesign'))); ui.loadModal.classList.add('opacity-0', 'hidden'); });
                     ui.loadNoBtn.addEventListener('click', () => ui.loadModal.classList.add('opacity-0', 'hidden'));
-                    ui.quoteButton.addEventListener('click', () => { ui.quoteModal.classList.remove('hidden'); setTimeout(() => ui.quoteModal.classList.remove('opacity-0'), 10); });
+                    
+                    ui.quoteButton.addEventListener('click', () => { 
+                        confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#22c55e', '#ffffff'] }); 
+                        ui.quoteModal.classList.remove('hidden'); 
+                        setTimeout(() => ui.quoteModal.classList.remove('opacity-0'), 10); 
+                    });
+                    
                     ui.quoteCloseBtn.addEventListener('click', () => ui.quoteModal.classList.add('opacity-0', 'hidden'));
                     ui.quoteForm.addEventListener('submit', handleQuoteSubmit);
                     
@@ -1507,176 +2042,6 @@
                         outlinePass.selectedObjects = [];
                     }
                 }
-
-                // ...
-                let isDieLineView = false;
-                let isAnimating = false; // <-- TAMBAHKAN INI UNTUK MENCEGAH BUG
-                let selectedPart = null;
-                // ...
-                // --- FUNGSI DIELINE YANG DIPERBAIKI DAN LEBIH DETAIL ---
-                function toggleDieLineView() {
-                    // 1. PENGAMAN ANIMASI:
-                    // Mencegah fungsi berjalan jika animasi lain sedang aktif.
-                    if (isAnimating) return;
-                    isAnimating = true; // Kunci fungsi agar tidak bisa diklik lagi
-
-                    // 2. PERSIAPAN:
-                    // Balik status view dan matikan kontrol orbit mouse
-                    isDieLineView = !isDieLineView;
-                    controls.enabled = !isDieLineView;
-
-                    // Ambil dimensi kotak (dikonversi dari cm ke unit 3D)
-                    const w = (state.width || defaultState.width) / 10;
-                    const h = (state.height || defaultState.height) / 10;
-                    const d = (state.depth || defaultState.depth) / 10;
-                    const duration = 1200; // Durasi animasi (dalam milidetik)
-
-                    // 3. PENGATURAN TARGET DIELINE (JARING-JARING):
-                    // Ini adalah bagian terpenting.
-                    
-                    // Rotasi standar agar semua bagian "tertidur" datar menghadap ke atas.
-                    // (Rotasi -90 derajat pada sumbu X)
-                    const flatQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
-
-                    // Target posisi (pos) dan rotasi (rot) untuk setiap bagian
-                    // Semua target 'pos' memiliki Y=0 agar rata di lantai.
-                    // Pola ini membentuk "salib" (cross pattern) standar.
-                    const targets = {
-                        "Dasar": {
-                            pos: new THREE.Vector3(0, 0, 0), // 'Dasar' sebagai pusat (0,0,0)
-                            rot: flatQuat // Datar
-                        },
-                        "Depan": {
-                            // 'Depan' menempel di sisi +Z dari 'Dasar'
-                            pos: new THREE.Vector3(0, 0, d / 2 + h / 2),
-                            rot: flatQuat // Datar
-                        },
-                        "Belakang": {
-                            // 'Belakang' menempel di sisi -Z dari 'Dasar'
-                            pos: new THREE.Vector3(0, 0, -d / 2 - h / 2),
-                            // Datar, tapi diputar 180 derajat (Math.PI) agar teks tidak terbalik
-                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, Math.PI))
-                        },
-                        "Kiri": {
-                            // 'Kiri' menempel di sisi -X dari 'Dasar'
-                            pos: new THREE.Vector3(-w / 2 - h / 2, 0, 0),
-                            // Datar, tapi diputar 90 derajat agar teks miring dengan benar
-                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, Math.PI / 2))
-                        },
-                        "Kanan": {
-                            // 'Kanan' menempel di sisi +X dari 'Dasar'
-                            pos: new THREE.Vector3(w / 2 + h / 2, 0, 0),
-                            // Datar, diputar -90 derajat
-                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, -Math.PI / 2))
-                        },
-                        "Tutup Atas": {
-                            // 'Tutup' menempel di sisi "atas" dari 'Belakang' (karena engselnya di sana)
-                            pos: new THREE.Vector3(0, 0, -d / 2 - h - d / 2),
-                            // Rotasinya sama dengan 'Belakang' agar nyambung
-                            rot: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, Math.PI))
-                        },
-                    };
-
-                    // 4. LOGIKA ANIMASI
-                    if (isDieLineView) {
-                        // --- TINDAKAN: MASUK KE MODE DIELINE ---
-
-                        // 4a. Simpan posisi & target kamera 3D saat ini
-                        originalCameraPos.copy(camera.position);
-                        originalControlsTarget.copy(controls.target);
-
-                        // 4b. Tutup kotak (jika terbuka) sebelum dibongkar
-                        if (lidPivot.rotation.x !== 0) {
-                             lidPivot.rotation.x = 0; // Reset instan
-                        }
-
-                        // 4c. Lepas semua bagian dari grup dan animasikan
-                        boxParts.forEach(part => {
-                            // Simpan data "original" (parent & pos/rot LOKAL) untuk dikembalikan nanti
-                            if (!part.userData.originalParent) {
-                                part.userData.originalParent = part.parent;
-                                part.userData.originalPos = part.position.clone();
-                                part.userData.originalRot = part.rotation.clone();
-                            }
-
-                            // Dapatkan posisi & rotasi GLOBAL (dunia) saat ini
-                            const worldPos = new THREE.Vector3();
-                            const worldQuat = new THREE.Quaternion();
-                            part.getWorldPosition(worldPos);
-                            part.getWorldQuaternion(worldQuat);
-
-                            // Pindahkan 'part' dari 'boxGroup' langsung ke 'scene'
-                            scene.attach(part); 
-                            // Atur pos/rot globalnya agar tidak "melompat"
-                            part.position.copy(worldPos);
-                            part.quaternion.copy(worldQuat);
-
-                            // Animasikan 'part' dari pos/rot globalnya ke target dieline
-                            const t = targets[part.name];
-                            if (t) {
-                                animateValue(part.position.clone(), t.pos, duration, (v) => part.position.copy(v));
-                                animateValue(part.quaternion.clone(), t.rot, duration, (q) => part.quaternion.copy(q));
-                            }
-                        });
-
-                        // 4d. Animasikan kamera ke tampilan "Top-Down" (dari atas)
-                        const layoutWidth = w + h*2; // Total lebar jaring-jaring
-                        const layoutHeight = d + h + d; // Total tinggi jaring-jaring
-                        const maxDim = Math.max(layoutWidth, layoutHeight); // Ambil ukuran terbesar
-                        // Atur posisi Y kamera berdasarkan ukuran jaring-jaring agar pas di layar
-                        animateValue(camera.position.clone(), new THREE.Vector3(0, maxDim * 1.2 + 3, 0.1), duration, (v) => camera.position.copy(v));
-                        animateValue(controls.target.clone(), new THREE.Vector3(0, 0, 0), duration, (v) => controls.target.copy(v));
-
-                    } else {
-                        // --- TINDAKAN: KEMBALI KE MODE 3D ---
-                        
-                        boxParts.forEach(part => {
-                            // 4a. Hitung target (posisi 3D asli)
-                            // Ini adalah perbaikan dari bug Anda.
-                            // Kita buat 'dummy' object untuk menghitung pos/rot global yang seharusnya.
-                            const dummy = new THREE.Object3D();
-                            dummy.position.copy(part.userData.originalPos);
-                            dummy.rotation.copy(part.userData.originalRot);
-                            part.userData.originalParent.add(dummy); // Pasang dummy ke parent asli
-                            
-                            const targetWorldPos = new THREE.Vector3();
-                            const targetWorldQuat = new THREE.Quaternion();
-                            dummy.getWorldPosition(targetWorldPos); // Dapatkan pos global
-                            dummy.getWorldQuaternion(targetWorldQuat); // Dapatkan rot global
-                            part.userData.originalParent.remove(dummy); // Hapus dummy
-
-                            // 4b. Animasikan 'part' kembali ke pos/rot 3D aslinya
-                            animateValue(part.position.clone(), targetWorldPos, duration, (v) => part.position.copy(v));
-                            animateValue(part.quaternion.clone(), targetWorldQuat, duration, (q) => part.quaternion.copy(q));
-                        });
-
-                        // 4c. Animasikan kamera kembali ke posisi 3D aslinya
-                        animateValue(camera.position.clone(), originalCameraPos, duration, (v) => camera.position.copy(v));
-                        animateValue(controls.target.clone(), originalControlsTarget, duration, (v) => controls.target.copy(v));
-
-                        // 4d. Pasang kembali (re-attach) 'part' ke 'boxGroup' SETELAH animasi selesai
-                        setTimeout(() => {
-                            boxParts.forEach(part => {
-                                // Pasang kembali ke parent aslinya (misal: 'lid' ke 'lidPivot')
-                                part.userData.originalParent.attach(part);
-                                
-                                // Reset ke pos/rot LOKAL aslinya (menghindari eror floating point)
-                                part.position.copy(part.userData.originalPos);
-                                part.rotation.copy(part.userData.originalRot);
-                            });
-                            controls.enabled = true; // Aktifkan kembali kontrol orbit
-                            isAnimating = false; // Buka kunci animasi
-                        }, duration + 50); // Beri buffer 50ms
-                        return; // Penting: return di sini karena kita pakai setTimeout
-                    }
-
-                    // 5. BUKA KUNCI ANIMASI
-                    // (Hanya untuk transisi KE mode dieline, karena mode KEMBALI di-handle di setTimeout)
-                    setTimeout(() => {
-                        isAnimating = false;
-                    }, duration + 50);
-                }
-                // --- AKHIR FUNGSI DIELINE ---
                 
                 function captureScreenshot() {
                     outlinePass.selectedObjects = []; // Hide outline for screenshot
@@ -1717,30 +2082,36 @@
 
                     const sideProps = state.sideProperties[parseInt(ui.contentSideSelect.value)];
                     ui.sideColorPicker.value = sideProps.color;
-                    ui.sideColorPicker.disabled = state.material !== 'ivory'; // Disable color picker if not ivory
+                    ui.sideColorPicker.disabled = state.material !== 'ivory'; 
 
                     document.querySelector(`input[name="content-type"][value="${sideProps.contentType}"]`).checked = true;
                     
+                    ui.patternSelect.value = sideProps.patternType || 'none';
+                    ui.patternColorPicker.value = sideProps.patternColor || '#e0e0e0';
+
                     const showContentControls = ui.contentSideSelect.value !== '' && sideNames.includes(sideNames[parseInt(ui.contentSideSelect.value)] );
                     ui.contentControls.classList.toggle('hidden', !showContentControls);
                     if(showContentControls){
                         ui.logoControls.classList.toggle('hidden', sideProps.contentType !== 'logo');
                         ui.textControls.classList.toggle('hidden', sideProps.contentType !== 'text');
+                        ui.stickerControls.classList.toggle('hidden', sideProps.contentType !== 'sticker');
+                        
                         ui.contentOffsetX.value = sideProps.offsetX; ui.offsetXValue.textContent = sideProps.offsetX;
                         ui.contentOffsetY.value = sideProps.offsetY; ui.offsetYValue.textContent = sideProps.offsetY;
                         ui.premiumFinishSelect.value = sideProps.premiumFinish;
 
                         if (sideProps.contentType === 'logo') { ui.logoScaleSlider.value = sideProps.logoScale; ui.logoScaleValue.textContent = Math.round(sideProps.logoScale * 100); } 
                         else if (sideProps.contentType === 'text') { ui.textInput.value = sideProps.text; ui.fontSelect.value = sideProps.font; ui.fontSizeSlider.value = sideProps.fontSize; ui.fontSizeValue.textContent = sideProps.fontSize; ui.textColorPicker.value = sideProps.textColor; }
+                        else if (sideProps.contentType === 'sticker') { ui.stickerScaleSlider.value = sideProps.stickerScale || 1.0; ui.stickerScaleValue.textContent = Math.round((sideProps.stickerScale || 1.0) * 100); }
                     }
                 }
 
-                function saveState() { localStorage.setItem('arjunaMockupDesign', JSON.stringify(state)); alert('Desain Anda telah disimpan di browser ini!'); }
+                function saveState() { localStorage.setItem('arjunaMockupDesign', JSON.stringify(state)); }
                 function loadState(saved) { state = saved; updateUIFromState(); updateBoxModel(); }
                 function checkForSavedState() { if (localStorage.getItem('arjunaMockupDesign')) { ui.loadModal.classList.remove('hidden'); setTimeout(() => ui.loadModal.classList.remove('opacity-0'), 10); } }
                 function resetState() { if(confirm("Yakin ingin mereset semua kustomisasi?")){ localStorage.removeItem('arjunaMockupDesign'); selectedPart = null; outlinePass.selectedObjects = []; state = JSON.parse(JSON.stringify(defaultState)); ui.contentSideSelect.value = 0; updateUIFromState(); updateBoxModel(); } }
                 
-                // --- Gemini AI Functions ---
+                // --- Gemini AI Functions (Code Removed) ---
                 const geminiModal = document.getElementById('gemini-modal');
                 const geminiCloseBtn = document.getElementById('gemini-close-btn');
                 const geminiTaglineBtn = document.getElementById('gemini-tagline-btn');
@@ -1752,48 +2123,52 @@
                 const geminiResultsList = document.getElementById('gemini-results-list');
                 const geminiBackBtn = document.getElementById('gemini-back-btn');
 
-                geminiTaglineBtn.addEventListener('click', () => {
-                    geminiModal.classList.remove('hidden');
-                    setTimeout(() => geminiModal.classList.remove('opacity-0'), 10);
-                });
+                if (geminiTaglineBtn) {
+                    geminiTaglineBtn.addEventListener('click', () => {
+                        geminiModal.classList.remove('hidden');
+                        setTimeout(() => geminiModal.classList.remove('opacity-0'), 10);
+                    });
+                }
                 
                 const closeGeminiModal = () => {
                     geminiModal.classList.add('opacity-0');
                     setTimeout(() => {
                         geminiModal.classList.add('hidden');
-                        geminiPromptView.classList.remove('hidden');
-                        geminiResultsView.classList.add('hidden');
-                        geminiResultsList.innerHTML = '';
+                        if(geminiPromptView) geminiPromptView.classList.remove('hidden');
+                        if(geminiResultsView) geminiResultsView.classList.add('hidden');
+                        if(geminiResultsList) geminiResultsList.innerHTML = '';
                     }, 300);
                 }
-                geminiCloseBtn.addEventListener('click', closeGeminiModal);
-                geminiBackBtn.addEventListener('click', () => {
+                if(geminiCloseBtn) geminiCloseBtn.addEventListener('click', closeGeminiModal);
+                if(geminiBackBtn) geminiBackBtn.addEventListener('click', () => {
                      geminiPromptView.classList.remove('hidden');
                      geminiResultsView.classList.add('hidden');
                      geminiResultsList.innerHTML = '';
                 });
 
-                geminiForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const productType = geminiProductType.value;
-                    if (!productType) return;
+                if(geminiForm) {
+                    geminiForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const productType = geminiProductType.value;
+                        if (!productType) return;
 
-                    geminiPromptView.classList.add('hidden');
-                    geminiResultsView.classList.remove('hidden');
-                    geminiLoading.classList.remove('hidden');
-                    geminiResultsList.innerHTML = '';
+                        geminiPromptView.classList.add('hidden');
+                        geminiResultsView.classList.remove('hidden');
+                        geminiLoading.classList.remove('hidden');
+                        geminiResultsList.innerHTML = '';
 
-                    const userQuery = `Buatkan 5 ide tagline yang singkat dan menarik untuk kemasan produk "${productType}".`;
-                    const systemPrompt = `Anda adalah seorang ahli branding yang kreatif, spesialisasinya adalah membuat tagline pendek (3-5 kata) untuk kemasan produk UMKM. Berikan 5 ide.`;
-                    
-                    try {
-                        const response = await callGeminiAPI(userQuery, systemPrompt);
-                        displayGeminiResults(response.text);
-                    } catch (error) {
-                        console.error('Error calling Gemini API:', error);
-                        displayGeminiResults("Maaf, terjadi kesalahan saat mengambil ide tagline. Coba lagi nanti.");
-                    }
-                });
+                        const userQuery = `Buatkan 5 ide tagline yang singkat dan menarik untuk kemasan produk "${productType}".`;
+                        const systemPrompt = `Anda adalah seorang ahli branding yang kreatif, spesialisasinya adalah membuat tagline pendek (3-5 kata) untuk kemasan produk UMKM. Berikan 5 ide.`;
+                        
+                        try {
+                            const response = await callGeminiAPI(userQuery, systemPrompt);
+                            displayGeminiResults(response.text);
+                        } catch (error) {
+                            console.error('Error calling Gemini API:', error);
+                            displayGeminiResults("Maaf, terjadi kesalahan saat mengambil ide tagline. Coba lagi nanti.");
+                        }
+                    });
+                }
                 
                 function displayGeminiResults(text) {
                     geminiLoading.classList.add('hidden');

@@ -437,13 +437,171 @@
 
         <!-- 3D MOCKUP VIEWER SECTION - UPDATED -->
         <section id="mockup-viewer" class="py-20 bg-gray-100">
-            <div class="container mx-auto px-6 max-w-7xl">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold section-title">Studio Desain Virtual Anda</h2>
-                    <p class="mt-2 text-gray-600 section-subtitle">Wujudkan ide kemasan Anda secara real-time. Atur setiap detail, tambahkan teks, dan langsung minta penawaran!</p>
+    <div class="container mx-auto px-6 max-w-7xl">
+        
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold section-title">Studio Desain Virtual Anda</h2>
+            <p class="mt-2 text-gray-600 section-subtitle">Wujudkan ide kemasan Anda secara real-time. Atur setiap detail, tambahkan teks, dan langsung minta penawaran!</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <div class="lg:col-span-1 space-y-6">
+                
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-center">
+                         <h3 class="text-white font-semibold text-lg tracking-wide flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                            Panel Kustomisasi
+                         </h3>
+                    </div>
+
+                    <div id="accordion-container" class="divide-y divide-gray-100">
+                        <div class="group">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200">
+                                <span class="font-semibold text-gray-700 text-sm flex items-center gap-2">📏 Ukuran & Dimensi</span>
+                                <svg class="w-5 h-5 text-gray-400 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content p-5 bg-gray-50 border-t border-gray-100" style="display: block;">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Preset Standar</label>
+                                        <select id="size-presets" class="block w-full p-2 text-sm border-gray-300 rounded-md border shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="custom">Ukuran Kustom</option>
+                                            <option value="18,10,7">Lunch Box M</option>
+                                            <option value="20,12,7.5">Lunch Box L</option>
+                                            <option value="22,10,5">Dus Martabak</option>
+                                            <option value="27,18.5,5.5">Dus Donat (Isi 6)</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div><label class="block text-[10px] text-gray-500 mb-1">Panjang</label><input type="number" id="custom-width" value="20" class="w-full p-2 text-sm border border-gray-300 rounded text-center"></div>
+                                        <div><label class="block text-[10px] text-gray-500 mb-1">Lebar</label><input type="number" id="custom-depth" value="12" class="w-full p-2 text-sm border border-gray-300 rounded text-center"></div>
+                                        <div><label class="block text-[10px] text-gray-500 mb-1">Tinggi</label><input type="number" id="custom-height" value="7" class="w-full p-2 text-sm border border-gray-300 rounded text-center"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200">
+                                <span class="font-semibold text-gray-700 text-sm flex items-center gap-2">📦 Material & Finishing</span>
+                                <svg class="w-5 h-5 text-gray-400 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content hidden p-5 bg-gray-50 border-t border-gray-100">
+                                <div class="space-y-4">
+                                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jenis Kertas</label><select id="material-select" class="block w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm"><option value="ivory">Ivory / Art Carton (Putih)</option><option value="kraft">Kraft (Coklat)</option><option value="duplex">Duplex (Abu-abu)</option></select></div>
+                                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Laminasi Luar</label><select id="finishing-select" class="block w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm"><option value="standar">Standar</option><option value="doff">Doff (Matte)</option><option value="glossy">Glossy (Mengkilap)</option></select></div>
+                                    <div class="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100"><input type="checkbox" id="food-grade-lining" class="h-4 w-4 text-blue-600 rounded border-gray-300"><label for="food-grade-lining" class="ml-2 block text-xs text-gray-700 font-semibold">Laminasi Dalam (Food Grade)</label></div>
+                                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Background</label><select id="environment-select" class="block w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm"><option value="studio">Studio Abu-abu</option><option value="wood">Meja Kayu</option></select></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200">
+                                 <span class="font-semibold text-gray-700 text-sm flex items-center gap-2">🎨 Konten & Desain</span>
+                                <svg class="w-5 h-5 text-gray-400 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content hidden p-5 bg-gray-50 border-t border-gray-100">
+                                <p class="text-[10px] text-blue-600 bg-blue-50 p-2 rounded mb-3 border border-blue-100 text-center">💡 Klik sisi kotak di kanan untuk mengeditnya.</p>
+                                <div class="space-y-4">
+                                    <div><label class="block text-xs font-bold text-gray-500 mb-1">Sisi Aktif:</label><select id="content-side-select" class="block w-full p-2 text-sm border border-gray-300 rounded bg-white font-medium text-gray-700"></select></div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 mb-2">Tipe Konten:</label>
+                                        <div class="flex flex-wrap gap-1 bg-white p-1 rounded-md border border-gray-200">
+                                            <label class="flex-1 text-center cursor-pointer"><input type="radio" id="content-type-none" name="content-type" value="none" class="peer sr-only" checked><span class="block py-1 px-2 text-[10px] rounded peer-checked:bg-blue-600 peer-checked:text-white hover:bg-gray-100 transition">Kosong</span></label>
+                                            <label class="flex-1 text-center cursor-pointer"><input type="radio" id="content-type-logo" name="content-type" value="logo" class="peer sr-only"><span class="block py-1 px-2 text-[10px] rounded peer-checked:bg-blue-600 peer-checked:text-white hover:bg-gray-100 transition">Logo</span></label>
+                                            <label class="flex-1 text-center cursor-pointer"><input type="radio" id="content-type-text" name="content-type" value="text" class="peer sr-only"><span class="block py-1 px-2 text-[10px] rounded peer-checked:bg-blue-600 peer-checked:text-white hover:bg-gray-100 transition">Teks</span></label>
+                                            <label class="flex-1 text-center cursor-pointer"><input type="radio" id="content-type-sticker" name="content-type" value="sticker" class="peer sr-only"><span class="block py-1 px-2 text-[10px] rounded peer-checked:bg-blue-600 peer-checked:text-white hover:bg-gray-100 transition">Stiker</span></label>
+                                        </div>
+                                    </div>
+                                    <div id="content-controls-container" class="hidden pt-2 space-y-3 border-t border-gray-200 mt-2">
+                                         <div class="grid grid-cols-2 gap-3">
+                                            <div><label class="text-[10px] text-gray-500 block mb-1">Geser X: <span id="offset-x-value">0</span>%</label><input id="content-offset-x" type="range" min="-50" max="50" step="1" value="0" class="w-full"></div>
+                                            <div><label class="text-[10px] text-gray-500 block mb-1">Geser Y: <span id="offset-y-value">0</span>%</label><input id="content-offset-y" type="range" min="-50" max="50" step="1" value="0" class="w-full"></div>
+                                         </div>
+                                         <div id="sticker-controls-container" class="hidden space-y-2">
+                                            <label class="text-[10px] font-bold text-gray-500">Pilih Stiker:</label>
+                                            <div class="grid grid-cols-4 gap-2">
+                                                <button class="sticker-btn h-10 border rounded bg-white hover:bg-gray-50 text-lg shadow-sm" data-sticker="halal" title="Halal">🟢</button>
+                                                <button class="sticker-btn h-10 border rounded bg-white hover:bg-gray-50 text-lg shadow-sm" data-sticker="recycle" title="Daur Ulang">♻️</button>
+                                                <button class="sticker-btn h-10 border rounded bg-white hover:bg-gray-50 text-lg shadow-sm" data-sticker="natural" title="Natural">🌿</button>
+                                                <button class="sticker-btn h-10 border rounded bg-white hover:bg-gray-50 text-lg shadow-sm" data-sticker="thankyou" title="Thank You">❤️</button>
+                                            </div>
+                                            <div><label class="text-[10px] text-gray-500 block mb-1">Ukuran Stiker: <span id="sticker-scale-value">100</span>%</label><input id="sticker-scale-slider" type="range" min="0.2" max="1.5" step="0.05" value="1.0" class="w-full"></div>
+                                         </div>
+                                         <div id="logo-controls-container" class="hidden space-y-2">
+                                            <label for="logo-upload" class="flex flex-col items-center px-4 py-3 bg-white text-blue rounded-lg shadow-sm tracking-wide uppercase border border-blue-200 cursor-pointer hover:bg-blue-50 transition"><span class="text-[10px] font-bold text-gray-600">📂 Unggah File Logo</span><input type='file' id="logo-upload" class="hidden" accept="image/*" /></label>
+                                            <div><label class="text-[10px] text-gray-500 block mb-1">Ukuran Logo: <span id="logo-scale-value">100</span>%</label><input id="logo-scale-slider" type="range" min="0.2" max="1.5" step="0.05" value="1.0" class="w-full"></div>
+                                         </div>
+                                         <div id="text-controls-container" class="hidden space-y-2">
+                                            <input type="text" id="text-input" placeholder="Tuliskan Sesuatu..." class="w-full p-2 border border-gray-300 rounded text-sm">
+                                            <div class="grid grid-cols-2 gap-2">
+                                                 <select id="font-select" class="text-xs p-2 border rounded"><option>Poppins</option><option>Arial</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option></select>
+                                                 <div><label class="text-[10px] block">Ukuran: <span id="font-size-value">48</span></label><input id="font-size-slider" type="range" min="16" max="128" step="1" value="48" class="w-full"></div>
+                                            </div>
+                                         </div>
+                                         <div><label class="block text-xs font-bold text-gray-500 mb-1">Finishing Khusus</label><select id="premium-finish-select" class="block w-full p-2 text-sm border border-gray-300 rounded-md"><option value="none">Tidak Ada</option><option value="emboss">Emboss (Timbul)</option><option value="deboss">Deboss (Tenggelam)</option><option value="foilEmas">Foil Emas</option><option value="foilPerak">Foil Perak</option></select></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200">
+                                <span class="font-semibold text-gray-700 text-sm flex items-center gap-2">🖌️ Tampilan & Warna</span>
+                                <svg class="w-5 h-5 text-gray-400 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content hidden p-5 bg-gray-50 border-t border-gray-100">
+                                 <div class="space-y-4">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div><label class="block text-[10px] text-center text-gray-500 mb-1">Warna Sisi</label><div class="relative h-8 w-full rounded-md overflow-hidden border border-gray-300 shadow-sm cursor-pointer"><input id="side-color-picker" type="color" value="#ffffff" class="absolute -top-2 -left-2 w-[150%] h-[200%] cursor-pointer p-0 border-0"></div></div>
+                                        <div><label class="block text-[10px] text-center text-gray-500 mb-1">Warna Teks</label><div class="relative h-8 w-full rounded-md overflow-hidden border border-gray-300 shadow-sm cursor-pointer"><input id="text-color-picker" type="color" value="#333333" class="absolute -top-2 -left-2 w-[150%] h-[200%] cursor-pointer p-0 border-0"></div></div>
+                                    </div>
+                                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pola (Pattern)</label><div class="flex gap-2"><select id="pattern-select" class="block flex-1 p-2 text-xs border border-gray-300 rounded shadow-sm"><option value="none">Polos</option><option value="stripes">Garis-garis</option><option value="polkadots">Polkadot</option><option value="checkered">Kotak Catur</option></select><div class="relative w-10 h-9 rounded border border-gray-300 overflow-hidden"><input id="pattern-color-picker" type="color" value="#e0e0e0" class="absolute -top-2 -left-2 w-[200%] h-[200%] cursor-pointer"></div></div></div>
+                                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Intensitas Cahaya: <span id="light-intensity-value">100</span>%</label><input id="light-intensity-slider" type="range" min="0.2" max="2.5" step="0.1" value="1.5" class="w-full"></div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-5 space-y-4">
+                    <div class="space-y-2">
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wide">Inspirasi Cepat</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="applyTheme('eco')" class="flex flex-col items-center justify-center p-2 rounded hover:bg-green-50 border border-transparent hover:border-green-200 transition"><div class="w-4 h-4 rounded-full bg-[#b08a5f] mb-1"></div><span class="text-[10px] font-medium text-gray-600">Natural</span></button>
+                            <button onclick="applyTheme('luxury')" class="flex flex-col items-center justify-center p-2 rounded hover:bg-gray-50 border border-transparent hover:border-gray-200 transition"><div class="w-4 h-4 rounded-full bg-black mb-1 border border-gray-200"></div><span class="text-[10px] font-medium text-gray-600">Mewah</span></button>
+                            <button onclick="applyTheme('fun')" class="flex flex-col items-center justify-center p-2 rounded hover:bg-pink-50 border border-transparent hover:border-pink-200 transition"><div class="w-4 h-4 rounded-full bg-pink-400 mb-1"></div><span class="text-[10px] font-medium text-gray-600">Ceria</span></button>
+                        </div>
+                    </div>
+                    <hr class="border-gray-100">
+                    <button id="quote-button" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"><span>Minta Penawaran</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="save-button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-lg text-xs transition">Simpan Desain</button>
+                        <button id="capture-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-3 rounded-lg text-xs transition">Ambil Foto</button>
+                    </div>
+                    <button id="reset-button" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-3 rounded-lg text-xs transition">Reset Semula</button>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 relative sticky top-24"> 
+                <div id="mockup-canvas-container" class="shadow-2xl rounded-xl border border-gray-300 bg-gray-200 w-full" style="height: 600px;"></div>
+                
+                <div class="absolute top-4 right-4 flex space-x-2">
+                    <button id="animate-box-btn" class="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white text-blue-600 transition" title="Animasi Buka/Tutup">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0l7-4 7 4" /></svg>
+                    </button>
+                    <button id="ar-button" class="hidden bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white text-purple-600 transition" title="Lihat AR">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
                     <!-- Kontrol -->
                     <div class="md:col-span-1 space-y-6">
                     <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
